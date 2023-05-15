@@ -8,12 +8,14 @@ function DefaultRangeInput(props) {
         <p for="customRange3" class="form-label">Rating from</p>
         <Wrapper>
           <input type="range" class="form-range" min="0" max="5" step="1" id="customRange3" style={{height: "20px"}}/>
+          <p>1</p>
         </Wrapper>
       </div>
       <div>
         <p for="customRange3" class="form-label">Rating from</p>
         <Wrapper>
           <input type="range" class="form-range" min="0" max="5" step="1" id="customRange3" style={{height: "20px"}}/>
+          <p>2</p>
         </Wrapper>
       </div>
     </Container>
