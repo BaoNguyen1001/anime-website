@@ -1,0 +1,16 @@
+.error {
+  color: red;
+  border: 1px solid red;
+  animation: fadein 0.5s;
+}
+
+.info {
+  color: green;
+  border: 1px solid green;
+  animation: fadein 0.5s;
+}
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

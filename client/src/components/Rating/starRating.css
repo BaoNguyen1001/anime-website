@@ -1,0 +1,21 @@
+.star-rating {
+  position: absolute;
+  left: 110px;
+  top: -15px;
+}
+
+.star {
+  margin: 0;
+}
+
+.on {
+  color: yellow;
+}
+
+.off {
+  color: #ccc;
+}
+
+.un-rating {
+  margin-left: 15px;
+}
