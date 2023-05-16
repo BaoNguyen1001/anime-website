@@ -2,27 +2,96 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import {
+  DefaultDropDownList,
+  DefaultTextInput,
+  DefaultRangeInput,
+} from '../components/Base/index';
+import { BiSearch } from 'react-icons/bi'
 import SearchResultsSkeleton from "../components/skeletons/SearchResultsSkeleton";
-import Filter from "../components/Filter/Filter";
+import { TopRecommendByIdQuery } from "../hooks/searchQueryStrings";
 
 function RecommendAnime() {
   const [animeDetails, setAnimeDetails] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState({
+    animeName: '',
+    genres: {
+      selected: '',
+      listGenres: [],
+    },
+    rating: {
+      minValue: 0,
+      maxValue: 5,
+    }
+  });
 
   useEffect(() => {
     getAnime();
   }, []);
 
   async function getAnime() {
+    setLoading(true);
     window.scrollTo(0, 0);
-    let res = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}api/getmalinfo?criteria=movie&count=100`
-    );
-
+    const res = await axios({
+      url: process.env.REACT_APP_BASE_URL,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      data: {
+        query: TopRecommendByIdQuery,
+        variables: {
+          ids: [32281, 5114, 9969]
+        },
+      },
+    }).catch((err) => {
+      console.log(err);
+    });
+    setAnimeDetails(res.data.data.Page.media);
+    setFilter({
+      ...filter,
+      genres: {
+        ...filter.genres,
+        listGenres: res.data.data.genres
+      }
+    })
     setLoading(false);
-    console.log(res.data.data);
-    setAnimeDetails(res.data.data);
-    document.title = "Popular Anime - Miyou";
+    document.title = "Recommend Anime - Miyou";
+  }
+
+  const updateFilterParams = (name, value, filterName = null) => {
+    if (filterName) {
+      setFilter({
+        ...filter,
+        [filterName]: {
+          ...filter[filterName],
+          [name]: value,
+        }
+      })
+    } else {
+      setFilter({
+        ...filter,
+        [name]: value,
+      })
+    }
+    console.log('1111', filter);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    updateFilterParams(name, value);
+  }
+
+  const handleDropDownChange = (e) => {
+    const { filterName, name, value } = e.target;
+    updateFilterParams(name, value, filterName);
+  }
+
+  const handleRangeChange = (e) => {
+    const { filterName, name, value } = e.target;
+    updateFilterParams(name, value, filterName);
   }
 
   return (
@@ -34,16 +103,48 @@ function RecommendAnime() {
             <Heading>
               <span>Filter search</span>
             </Heading>
-              <Filter/>
+            <FilterWrapper>
+              <ItemWrapper>
+                <p className="label-name">Search</p>
+                <DefaultTextInput
+                  type="text"
+                  icon={<BiSearch/>}
+                  value={filter?.animeName}
+                  onChange={handleInputChange}
+                  name="animeName"
+                />
+              </ItemWrapper>
+
+              <ItemWrapper>
+                <p className="label-name">Genres</p>
+                <DefaultDropDownList
+                  value={filter?.genres?.selected}
+                  list={filter?.genres?.listGenres}
+                  onChange={handleDropDownChange}
+                  filterName="genres"
+                />
+              </ItemWrapper>
+              
+              <ItemWrapper>
+                <DefaultRangeInput
+                  filterName="rating"
+                  label="Rating"
+                  min={0}
+                  max={5}
+                  value={filter?.rating}
+                  onChange={handleRangeChange}
+                />
+              </ItemWrapper>
+            </FilterWrapper>
           </div>
           <Heading>
             <span>Recommend Anime</span> Results
           </Heading>
           <CardWrapper>
             {animeDetails.map((item, i) => (
-              <Links to={"/id/" + item.node.id}>
-                <img src={item.node.main_picture.large} alt="" />
-                <p>{item.node.title}</p>
+              <Links to={"/id/" + item.idMal}>
+                <img src={item.coverImage.large} alt="" />
+                <p>{item.title.english}</p>
               </Links>
             ))}
           </CardWrapper>
@@ -133,5 +234,20 @@ const Heading = styled.p`
     font-size: 1.6rem;
     margin-bottom: 1rem;
   }
-`;
+`
+
+const FilterWrapper = styled.div`
+  display: grid;
+  grid-gap: 24px;
+  grid-template-columns: 200px 200px 424px;
+  align-items: center;
+  margin-bottom: 50px;
+`
+
+const ItemWrapper = styled.div`
+  color: white;
+  margin-right: 25px;
+  font-size: 13px;
+`
+
 export default RecommendAnime;

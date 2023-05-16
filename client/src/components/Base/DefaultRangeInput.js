@@ -1,25 +1,57 @@
 import styled from "styled-components";
 
-function DefaultRangeInput(props) {
-  const { value } = props;
+export function DefaultRangeInput(props) {
+  const { min, max, filterName, onChange, label, value } = props;
+
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+
+    onChange({
+      target: {
+        filterName,
+        name,
+        value,
+      }
+    })
+  }
+
   return (
     <Container>
       <div>
-        <p for="customRange3" class="form-label">Rating from</p>
+        <p class="form-label">{label} from</p>
         <Wrapper>
-          <input type="range" class="form-range" min="0" max="5" step="1" id="customRange3" style={{height: "20px"}}/>
-          <p>1</p>
+          <input
+            type="range"
+            class="form-range"
+            min={min}
+            max={max}
+            step="1"
+            name="minValue"
+            style={{height: "20px"}}
+            onChange={handleOnChange}
+            value={value?.minValue}
+          />
+          <span className="min-value">{value?.minValue}</span>
         </Wrapper>
       </div>
       <div>
-        <p for="customRange3" class="form-label">Rating from</p>
+        <p class="form-label">{label} to</p>
         <Wrapper>
-          <input type="range" class="form-range" min="0" max="5" step="1" id="customRange3" style={{height: "20px"}}/>
-          <p>2</p>
+          <input
+            type="range"
+            class="form-range"
+            min={min}
+            max={max}
+            step="1"
+            name="maxValue"
+            style={{height: "20px"}}
+            onChange={handleOnChange}
+            value={value?.maxValue}
+          />
+          <span className="max-value">{value?.maxValue}</span>
         </Wrapper>
       </div>
     </Container>
-
   )
 }
 
@@ -41,7 +73,3 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
 `
-
-
-
-export default DefaultRangeInput;

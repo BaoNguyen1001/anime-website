@@ -230,7 +230,7 @@ export let searchWatchedId = `
 // `;
 
 
-export let getTopRecommendByIdQuery = `
+export let TopRecommendByIdQuery = `
 	query($ids: [Int]) {
 		Page {
 			media(idMal_in: $ids, type: ANIME) {
@@ -239,15 +239,21 @@ export let getTopRecommendByIdQuery = `
 					romaji
 					english
 					native
-					userPreferred
 				}
 				genres
 				bannerImage
 				coverImage {
-					extraLarge
+					medium
 					large
 				}
 			}
 		}
+		genres: GenreCollection
+	}
+`
+
+export let GenresCollectionQuery = `
+	query() {
+		genres: GenreCollection
 	}
 `

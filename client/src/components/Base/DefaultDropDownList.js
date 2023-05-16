@@ -1,15 +1,18 @@
 import Dropdown from 'react-bootstrap/Dropdown';
 import styled from 'styled-components';
 import './style.css';
-import React, { useState, useEffect } from 'react';
-function DefaultDropDownList(props) {
+import React, { useState, useEffect, useRef } from 'react';
+export function DefaultDropDownList(props) {
   const {
     value,
     list,
     onChange,
+    filterName,
   } = props;
 
   const [listItem, setListItem] = useState();
+  const inputRef = useRef();
+
   useEffect(() => {
     setListItem(list);
   }, []);
@@ -17,19 +20,43 @@ function DefaultDropDownList(props) {
   const handleOnClick = (e) => {
     e.preventDefault();
     const { text } = e.target;
-    onChange(text);
+    const { name } = inputRef.current;
+    onChange({
+      target: {
+        filterName,
+        name,
+        value: text,
+      }
+    });
   }
 
   const handleInputChange = (e) => {
-    const { value } = e.target;
-    onChange(value);
+    const { name, value } = e.target;
+    onChange({
+      target: {
+        filterName,
+        name,
+        value
+      }
+    });
+  }
+
+  const handleClearInput = (e) => {
+    const { name } = e.target;
+    onChange({
+      target: {
+        filterName,
+        name,
+        value: '',
+      }
+    })
   }
 
   return (
     <DropDownWrapper>
         <Dropdown>
           <Dropdown.Toggle variant='none'  as={CustomToggle}>
-            <input placeholder='Any' value={value} onChange={handleInputChange} onClick={() => onChange('')} name='selectedInput'/>
+            <input placeholder='Any' value={value} onChange={handleInputChange} onClick={handleClearInput} name='selected' ref={inputRef}/>
           </Dropdown.Toggle>
 
           <Dropdown.Menu id="dropdown-menu-custom-components">
@@ -69,7 +96,6 @@ const DropDownWrapper = styled.div`
   border-radius: 6px;
   align-items: center;
   justify-content: center;
+  position: relative;
   
 `
-
-export default DefaultDropDownList;

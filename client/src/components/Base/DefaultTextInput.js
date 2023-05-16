@@ -2,7 +2,7 @@
 import styled from "styled-components";
 import PropTypes from 'prop-types';
 
-function DefaultTextInput(props) {
+export function DefaultTextInput(props) {
   const {
     type,
     icon,
@@ -45,7 +45,7 @@ const InputItem = styled.div`
   display: grid;
   grid-gap: 10px;
   grid-template-columns: 13px auto 13px;
-  padding: 12.25px 10px;
+  padding: 10px 10px;
   letter-spacing: .03rem;
   font-weight: 600;
   border-radius: 6px;
@@ -61,5 +61,3 @@ const InputItem = styled.div`
   }
   
 `
-
-export default DefaultTextInput;
