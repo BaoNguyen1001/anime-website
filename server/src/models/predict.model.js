@@ -2,20 +2,15 @@ const Sequelize = require('sequelize');
 const db = require('../configs/database.config');
 
 
-const PredictModel = db.sequelize.define( "predict", {
+const PredictModel = db.sequelize.define( "predicts", {
   userId: {
     type: Sequelize.INTEGER,
     allowNull: false,
     primaryKey: true,
   },
-  movieId: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-  },
-  predictRating: {
-    type: Sequelize.FLOAT,
-    allowNull: false
+  recommendations: {
+    type: Sequelize.ARRAY(Sequelize.JSON),
+    allowNull: true
   }
 })
 
