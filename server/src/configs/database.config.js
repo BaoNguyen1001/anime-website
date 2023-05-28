@@ -5,7 +5,7 @@ const dbConfig = {
   HOST: "localhost",
   USER: "postgres",
   PASSWORD: "admin",
-  DB: "recommendation_system_test",
+  DB: "recommendation_system",
   dialect: "postgres",
   pool: {
     max: 5,

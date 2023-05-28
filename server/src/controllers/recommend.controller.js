@@ -7,6 +7,7 @@ const RecommendController = {};
 
 
 RecommendController.getRecommend = async (req, res) => {
+  const startTime = new Date()
   const { id } = req.user;
 
   const ratingsData = await RatingModel.findAll({
@@ -37,7 +38,7 @@ RecommendController.getRecommend = async (req, res) => {
 
   const result = await PredictModel.bulkCreate(predictsData.data, {
     fields:["userId", "recommendations"] ,
-    updateOnDuplicate: ["userId"] 
+    updateOnDuplicate: ["recommendations"] 
   })
 
   if(!result) {
@@ -58,7 +59,8 @@ RecommendController.getRecommend = async (req, res) => {
     .status(404)
     .json({error: 'Not found the user'})
   }
-
+  const endTime = new Date()
+  console.log('Execute time: ', endTime.getTime() - startTime.getTime());
   return res.status(200).json({data: userPredicts})
 }
 
@@ -72,9 +74,11 @@ RecommendController.getTopRatingByUserId = async (req, res) => {
     }
   })
 
-  return res
-  .status(404)
-  .json({error: 'Not found the user'})
+  if(!userPredicts){
+    return res
+    .status(404)
+    .json({error: 'Not found the user'})
+  }
 
   return res.status(200).json({data: userPredicts});
 }

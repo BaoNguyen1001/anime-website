@@ -28,13 +28,13 @@ def create_app(test_config=None):
     app = Flask(__name__)
     
     app.config["SECRET_KEY"] = "some_dev_key"
-    url = os.getenv("DATABASE_URL")
-    url_test = os.getenv("DATABASE_URL_TEST")
-    # alternative configuration based on if is test env or not
-    if test_config is None:
-        app.config["SQLALCHEMY_DATABASE_URI"] = url
-    elif test_config == "test":
-        app.config["SQLALCHEMY_DATABASE_URI"] = url_test
+    # url = os.getenv("DATABASE_URL")
+    # url_test = os.getenv("DATABASE_URL_TEST")
+    # # alternative configuration based on if is test env or not
+    # if test_config is None:
+    #     app.config["SQLALCHEMY_DATABASE_URI"] = url
+    # elif test_config == "test":
+    #     app.config["SQLALCHEMY_DATABASE_URI"] = url_test
 
     @app.errorhandler(404)
     def not_found(error):

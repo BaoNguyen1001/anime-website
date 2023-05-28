@@ -49,7 +49,7 @@ class RecommendationEngine:
     predictions = model.fit(ratingsDF)
     predictions.setColdStartStrategy("drop");
     self.__calculate_rmse(predictions, ratingsDF)
-    list_predict_rating = predictions.recommendForAllUsers(10).toJSON()
+    list_predict_rating = predictions.recommendForAllUsers(100).toJSON()
     results = self.__parse_to_json(list_predict_rating)
     return results
 

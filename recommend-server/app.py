@@ -29,7 +29,7 @@ def init_spark_context():
     sc = spark.sparkContext
     return sc, spark
 #test_config="test"
-app = create_app(test_config = "test")
+app = create_app()
 sc, spark = init_spark_context()
 recommendEngine = RecommendationEngine(sc, spark, app)
 
@@ -38,7 +38,7 @@ def convert_to_predict_obj(obj):
 
 
 @app.route("/api/recommend", methods=["POST"])
-async def getRecommend():
+def getRecommend():
     try:
         reqData = request.json
         ratingsList = reqData["ratingsList"]
