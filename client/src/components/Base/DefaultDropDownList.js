@@ -20,36 +20,34 @@ export function DefaultDropDownList(props) {
   const handleOnClick = (e) => {
     e.preventDefault();
     const { text } = e.target;
-    const { name } = inputRef.current;
     onChange({
       target: {
         filterName,
-        name,
+        name:'selected',
         value: text,
       }
     });
   }
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     onChange({
       target: {
         filterName,
-        name,
+        name:'selected',
         value
       }
     });
   }
 
   const handleClearInput = (e) => {
-    const { name } = e.target;
-    onChange({
-      target: {
-        filterName,
-        name,
-        value: '',
-      }
-    })
+    // onChange({
+    //   target: {
+    //     filterName,
+    //     name:'selected',
+    //     value: '',
+    //   }
+    // })
   }
 
   return (

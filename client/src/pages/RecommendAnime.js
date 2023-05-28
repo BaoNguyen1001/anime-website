@@ -76,12 +76,30 @@ function RecommendAnime() {
         [name]: value,
       })
     }
-    console.log('1111', filter);
   };
+
+  const filterData = (item) => {
+    const {animeName, genres: {selected: genreSelected}} = filter;
+
+    const filterMethod = [
+      (item => item.title.english.toLowerCase().includes(animeName.toLowerCase())),
+      (item => genreSelected ? item.genres.includes(genreSelected) : true)
+    ]
+
+    const result =  filterMethod.map((method) => {
+      if (method(item)) {
+        return true;
+      }
+      return false;
+    })
+
+    return !result.includes(false)
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     updateFilterParams(name, value);
+
   }
 
   const handleDropDownChange = (e) => {
@@ -141,7 +159,7 @@ function RecommendAnime() {
             <span>Recommend Anime</span> Results
           </Heading>
           <CardWrapper>
-            {animeDetails.map((item, i) => (
+            {animeDetails.filter(filterData).map((item, i) => (
               <Links to={"/id/" + item.idMal}>
                 <img src={item.coverImage.large} alt="" />
                 <p>{item.title.english}</p>
