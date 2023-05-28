@@ -29,59 +29,25 @@ def init_spark_context():
     sc = spark.sparkContext
     return sc, spark
 #test_config="test"
-app = create_app(test_config = None)
-db.init_app(app)
-migrate = Migrate(app, db)
+app = create_app(test_config = "test")
 sc, spark = init_spark_context()
 recommendEngine = RecommendationEngine(sc, spark, app)
 
 def convert_to_predict_obj(obj):
     return Predicts(userId = obj["userId"], recommendations = obj["recommendations"])
 
-@app.route("/api/recommend", methods=["GET"])
-def getRating():
-    predictsData = []
-    ratingsData = []
-    error = False
-    startTime
-    endTime
+
+@app.route("/api/recommend", methods=["POST"])
+async def getRecommend():
     try:
-        startTime = datetime.now()
-        ratingResponse = Ratings.query.all()
-        for rating in ratingResponse:
-            ratingsData.append(rating.to_json())
-
-        recommendResults = recommendEngine.train_model(ratingsData)
-        predictsData = map(convert_to_predict_obj, recommendResults)
-        predictsData = list(predictsData)
-
-        db.session.query(Predicts).delete()
-        db.session.add_all(predictsData)
-        db.session.commit()
-        
-        
+        reqData = request.json
+        ratingsList = reqData["ratingsList"]
+        recommendResults = recommendEngine.train_model(ratingsList)
+        return jsonify(recommendResults), 200
+    
     except Exception as e:
-        error = True
-        db.session.rollback()
         print(sys.exc_info())
-    finally:
-        db.session.close()
-        endTime = datetime.now()
-        if error:
-            abort(400)
-        else:
-            print('Updated the predicts database')
-            print('Execute time: ' + str(endTime - startTime))
-            return jsonify(recommendResults), 200
-
-
-@app.route("/api/top-rating/<int:user_id>", methods=["GET"])
-def getTopRating(user_id):
-    data = db.get_or_404(Predicts, user_id)
-    if (data):
-      return jsonify(data.to_json()), 200
-    else:
-      return data
+        abort(400)
 
 
 if __name__ == "__main__":

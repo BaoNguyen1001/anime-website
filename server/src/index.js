@@ -7,6 +7,7 @@ const db = require('./configs/database.config');
 const authRouter = require('./routes/auth.route');
 const movieRouter = require('./routes/movie.route');
 const ratingRouter = require('./routes/rating.route');
+const recommendRouter = require('./routes/recommend.route');
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRouter);
 //app.use('/api/movie', movieRouter);
 app.use('/api/movie', ratingRouter);
+app.use('/api/recommend', recommendRouter);
 
 const server = app.listen(process.env.SERVER_PORT, () => {
   console.log(`Express running on ${server.address().port}`)
