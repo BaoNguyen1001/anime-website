@@ -9,7 +9,7 @@ import CustomMessage from '../components/Message/CustomMessage';
 import AuthService from "../services/Auth.service";
 
 function Login() {
-  const [username, setUsername] = useState("");
+  const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState();
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ function Login() {
     setLoading(true);
     setMessage();
 
-    await AuthService.login(username, password, setMessage, navigate);
+    await AuthService.login(userName, password, setMessage, navigate);
     setLoading(false);
 
   }
@@ -34,7 +34,7 @@ function Login() {
           <Input
             type="text"
             placeholder="Username"
-            value={username}
+            value={userName}
             onChange={(event) => setUsername(event.target.value)}
             validations={[required]}
             required

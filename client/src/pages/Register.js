@@ -9,7 +9,7 @@ import CustomMessage from "../components/Message/CustomMessage";
 import AuthService from "../services/Auth.service";
 
 function Register() {
-  const [username, setUsername] = useState("");
+  const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmedPassword, setConfirmedPassword] = useState("");
   const [message, setMessage] = useState();
@@ -21,7 +21,7 @@ function Register() {
     setLoading(true);
     setMessage();
     
-    await AuthService.register(username, password, setMessage, setIsError);
+    await AuthService.register(userName, password, setMessage, setIsError);
     setLoading(false);
   }
 
@@ -32,7 +32,7 @@ function Register() {
           <Input
             type="text"
             placeholder="Username"
-            value={username}
+            value={userName}
             onChange={(event) => setUsername(event.target.value)}
             required
             validations={[required]}

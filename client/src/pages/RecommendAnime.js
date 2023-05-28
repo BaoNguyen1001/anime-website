@@ -61,6 +61,11 @@ function RecommendAnime() {
     document.title = "Recommend Anime - Miyou";
   }
 
+  async function getRecommendId() {
+  
+  }
+
+
   const updateFilterParams = (name, value, filterName = null) => {
     if (filterName) {
       setFilter({

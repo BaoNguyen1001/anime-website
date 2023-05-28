@@ -3,9 +3,9 @@ import api from './Api.service';
 import TokenService from './Token.service';
 import { store, setAuthenticationState } from '../store';
 
-const register = async (username, password, setMessage, setIsError) => {
+const register = async (userName, password, setMessage, setIsError) => {
   return await api.post("/auth/signup", {
-    username,
+    userName,
     password
   })
   .then((response) => {
@@ -21,10 +21,10 @@ const register = async (username, password, setMessage, setIsError) => {
   })
 };
 
-const login = async (username, password, setMessage, navigate) => {
+const login = async (userName, password, setMessage, navigate) => {
   return await api
     .post("/auth/login", {
-      username,
+      userName,
       password
     })
     .then((response) => {
