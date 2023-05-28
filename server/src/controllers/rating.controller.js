@@ -41,28 +41,13 @@ RatingController.updateRating = async (req, res) => {
       }
     });
   } else {
-    const isRating = await RatingModel.findOne({
-      where: {
-        userId: id,
-        movieId,
-      }
-    })
-    if (isRating) {
-      updateRating = await RatingModel.update({ rating: newRating }, {
-        where: {
-          userId: id,
-          movieId,
-        }
-      })
-    } else {
-      updateRating = await RatingModel.create({userId: id, movieId, rating: newRating});
-    }
+    updateRating = await RatingModel.upsert({userId: id, movieId, rating: newRating})
+  }
 
-    if(!updateRating) {
-      return res
-        .status(500)
-        .json({error: 'Server error. Pls try again'})
-    }
+  if(!updateRating) {
+    return res
+      .status(500)
+      .json({error: 'Server error. Pls try again'})
   }
 
   return res

@@ -10,7 +10,6 @@ const AuthController = {};
 AuthController.profile = async(req, res) => {
   try {
     const users = await UserModel.findAll();
-    console.log(users);
     return res.status(200).json(users)
   } catch(error) {
     console.log(error);
