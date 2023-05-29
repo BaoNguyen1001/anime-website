@@ -6,17 +6,16 @@ RatingController.getRating = async (req, res) => {
   const user = req.user;
   const { movieId } = req?.params;
 
-  const rating = await RatingModel.findOne({
+  const ratings = await RatingModel.findOne({
     attributes: ['rating'],
     where: {
-      userId: user.userId,
+      userId: user.id,
       movieId,
     }
   })
-
   return res
     .status(200)
-    .json({data: {rating: rating || 0}})
+    .json({data: ratings?.rating || 0})
 }
 
 RatingController.updateRating = async (req, res) => {
@@ -52,7 +51,7 @@ RatingController.updateRating = async (req, res) => {
 
   return res
     .status(200)
-    .json({data: 'Update rating success'})
+    .json({data: newRating})
 }
 
 

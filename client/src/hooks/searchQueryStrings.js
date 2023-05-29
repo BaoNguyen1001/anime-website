@@ -231,14 +231,15 @@ export let searchWatchedId = `
 
 
 export let TopRecommendByIdQuery = `
-	query($ids: [Int]) {
-		Page {
+	query($ids: [Int], $perPage: Int, $page: Int) {
+		Page(page: $page, perPage: $perPage) {
 			media(idMal_in: $ids, type: ANIME) {
 				idMal
 				title {
 					romaji
 					english
 					native
+					userPreferred
 				}
 				genres
 				bannerImage

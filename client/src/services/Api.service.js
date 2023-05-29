@@ -27,7 +27,7 @@ instance.interceptors.response.use(
   },
   async (err) => {
     const originalConfig = err.config;
-    if(!['/auth/login', '/auth/signup'].includes(originalConfig.url) && err.response) {
+    if((err.response.status === 403 && !originalConfig._retry)) {
       originalConfig._retry = true;
 
       try {
@@ -37,7 +37,6 @@ instance.interceptors.response.use(
 
         const { accessToken } = rs.data;
         TokenService.updateAccessToken(accessToken);
-
         return instance(originalConfig);
       } catch (_error) {
         return Promise.reject(_error);

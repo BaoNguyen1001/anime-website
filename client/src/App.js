@@ -38,12 +38,13 @@ function App(props) {
     return errorInfos.map((errorInfo) => {
       let title = errorInfo.title || '';
       let text = errorInfo.msgs || '';
-      
+      let onOK = errorInfo.onOK || '';
       return (
       <CustomDialog
         title={title}
         text={text}
         onButtonClick={handleErrorInfoDialogButtonClick}
+        onOK={onOK}
       />
       );
     });

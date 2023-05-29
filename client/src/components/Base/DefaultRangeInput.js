@@ -18,11 +18,11 @@ export function DefaultRangeInput(props) {
   return (
     <Container>
       <div>
-        <p class="form-label">{label} from</p>
+        <p className="form-label">{label} from</p>
         <Wrapper>
           <input
             type="range"
-            class="form-range"
+            className="form-range"
             min={min}
             max={max}
             step="1"
@@ -35,11 +35,11 @@ export function DefaultRangeInput(props) {
         </Wrapper>
       </div>
       <div>
-        <p class="form-label">{label} to</p>
+        <p className="form-label">{label} to</p>
         <Wrapper>
           <input
             type="range"
-            class="form-range"
+            className="form-range"
             min={min}
             max={max}
             step="1"

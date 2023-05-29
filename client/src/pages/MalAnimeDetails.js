@@ -4,18 +4,13 @@ import { useParams, Link } from "react-router-dom";
 import styled from "styled-components";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { searchByIdQuery } from "../hooks/searchQueryStrings";
-import {useDispatch} from 'react-redux';
-
-import {showDialog} from '../store';
 import MovieService from "../services/Movie.service";
-import AuthService from '../services/Auth.service';
 
 import AnimeDetailsSkeleton from "../components/skeletons/AnimeDetailsSkeleton";
 import StarRating from "../components/Rating/StarRating";
 
 function MalAnimeDetails() {
   let id = useParams().id;
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const { width } = useWindowDimensions();
   const [anilistResponse, setAnilistResponse] = useState();
@@ -67,19 +62,17 @@ function MalAnimeDetails() {
       });
     setMalResponse(malRes.data);
 
-    await MovieService.getRating(id, setRating);
+    const { data: {data: rating} } = await MovieService.getRating(id);
+    if(rating) {
+      setRating(rating)
+    }
     setLoading(false);
   }
 
   const updateRating = async (newRating) => {
-    const user = AuthService.getCurrentUser();
-    if(!user) {
-      dispatch(showDialog({
-        title: 'Error message',
-        msgs: 'Pls login before rating'
-      }))
-    } else {
-      return await MovieService.updateRating(id, newRating, setRating);
+    const {data: {data: rating}} = await MovieService.updateRating(id, newRating);
+    if (rating) {
+      setRating(rating)
     }
   }
 
@@ -192,15 +185,15 @@ function MalAnimeDetails() {
                 <DubContainer>
                   <h2>Episodes</h2>
                   {malResponse.isDub && (
-                    <div class="switch">
+                    <div className="switch">
                       <label for="switch">
                         <input
                           type="checkbox"
                           id="switch"
                           onChange={(e) => setDub(!dub)}
                         ></input>
-                        <span class="indicator"></span>
-                        <span class="label">{dub ? "Dub" : "Sub"}</span>
+                        <span className="indicator"></span>
+                        <span className="label">{dub ? "Dub" : "Sub"}</span>
                       </label>
                     </div>
                   )}

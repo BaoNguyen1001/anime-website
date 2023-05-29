@@ -52,8 +52,3 @@ class RecommendationEngine:
     list_predict_rating = predictions.recommendForAllUsers(100).toJSON()
     results = self.__parse_to_json(list_predict_rating)
     return results
-
-
-  def get_top_rating(self):
-    #user_predict_rating = self.predictions.recommendForUserSubset([userId], 3)
-    pass

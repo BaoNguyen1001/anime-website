@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import {
   DefaultDropDownList,
@@ -10,8 +10,10 @@ import {
 import { BiSearch } from 'react-icons/bi'
 import SearchResultsSkeleton from "../components/skeletons/SearchResultsSkeleton";
 import { TopRecommendByIdQuery } from "../hooks/searchQueryStrings";
+import PredictService from "../services/Predict.service";
 
 function RecommendAnime() {
+  let page = useParams().page;
   const [animeDetails, setAnimeDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState({
@@ -28,11 +30,13 @@ function RecommendAnime() {
 
   useEffect(() => {
     getAnime();
-  }, []);
+  }, [page]);
 
   async function getAnime() {
     setLoading(true);
     window.scrollTo(0, 0);
+    const adminesRecommend = await getRecommendAnime();
+    const animesId  = getAnimesId(adminesRecommend);
     const res = await axios({
       url: process.env.REACT_APP_BASE_URL,
       method: "POST",
@@ -43,13 +47,21 @@ function RecommendAnime() {
       data: {
         query: TopRecommendByIdQuery,
         variables: {
-          ids: [32281, 5114, 9969]
+          ids: animesId,
+          perPage: 50,
+          page: page,
         },
       },
     }).catch((err) => {
       console.log(err);
     });
-    setAnimeDetails(res.data.data.Page.media);
+    const animeList = res.data.data.Page.media.map((item) => {
+      const newItem = {...item};
+      newItem.rating = adminesRecommend.find(item => item.movieId === newItem.idMal).rating;
+      return newItem;
+    }).sort((a, b) => b.rating - a.rating);
+
+    setAnimeDetails(animeList);
     setFilter({
       ...filter,
       genres: {
@@ -61,8 +73,16 @@ function RecommendAnime() {
     document.title = "Recommend Anime - Miyou";
   }
 
-  async function getRecommendId() {
-  
+  const getRecommendAnime = async () => {
+    const {data: {data: result}} = await PredictService.getRecommendIdByUser();
+    return result;
+  }
+
+  const getAnimesId = (animeList) => {
+    const ids = [...animeList.map((item) => {
+      return item.movieId
+    })]
+    return ids;
   }
 
 
@@ -84,11 +104,12 @@ function RecommendAnime() {
   };
 
   const filterData = (item) => {
-    const {animeName, genres: {selected: genreSelected}} = filter;
-
+    const {animeName, genres: {selected: genreSelected}, rating: {minValue, maxValue}} = filter;
+    const titleLanguage = item.title.english ? 'english' : 'userPreferred';
     const filterMethod = [
-      (item => item.title.english.toLowerCase().includes(animeName.toLowerCase())),
-      (item => genreSelected ? item.genres.includes(genreSelected) : true)
+      (item => item.title[titleLanguage].toLowerCase().includes(animeName.toLowerCase())),
+      (item => genreSelected ? item.genres.includes(genreSelected) : true),
+      (item => item.rating >= minValue && item.rating <= maxValue),
     ]
 
     const result =  filterMethod.map((method) => {
@@ -167,10 +188,20 @@ function RecommendAnime() {
             {animeDetails.filter(filterData).map((item, i) => (
               <Links to={"/id/" + item.idMal}>
                 <img src={item.coverImage.large} alt="" />
-                <p>{item.title.english}</p>
+                <p style={{marginBottom: 0}}>{item.title?.english || item.title?.userPreferred}</p>
+                <p>Rating: {item.rating}</p>
               </Links>
             ))}
           </CardWrapper>
+          <NavButtons>
+            {page > 1 && (
+              <NavButton to={"/recommend/" + (parseInt(page) - 1)}>
+                Previous
+              </NavButton>
+            )}
+            <NavButton to={"/recommend/" + (parseInt(page) + 1)}>Next</NavButton>
+            
+          </NavButtons>
         </Parent>
       )}
     </div>
@@ -272,5 +303,23 @@ const ItemWrapper = styled.div`
   margin-right: 25px;
   font-size: 13px;
 `
+
+const NavButtons = styled.div`
+  margin-top: 2.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+`;
+
+const NavButton = styled(Link)`
+  padding: 0.8rem 2rem;
+  text-decoration: none;
+  color: white;
+  background-color: none;
+  border: 2px solid #53507a;
+  border-radius: 0.5rem;
+`;
 
 export default RecommendAnime;

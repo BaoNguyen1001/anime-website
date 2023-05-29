@@ -6,14 +6,21 @@ export default function CustomDialog({
   onButtonClick,
   title,
   text,
+  onOK,
 }) {
 
   const handleClose = (e) => {
+    if (typeof onOK === 'function') {
+      onOK();
+    }
     onButtonClick(e, 'Close');
   }
 
-  const handleGoToLogin = (e) => {
-    window.location.href = '/login'
+  const handleOnOK = (e) => {
+    if (typeof onOK === 'function') {
+      onOK();
+    }
+    onButtonClick(e, 'Close');
   }
 
   return (
@@ -25,16 +32,13 @@ export default function CustomDialog({
         show={true}
         onHide={handleClose}
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton style={{padding: '4px 16px'}}>
           <Modal.Title><VscError size={40} color='red'/> {title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>{text}</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleGoToLogin}>
-            Go To Login
+        <Modal.Footer style={{display: 'flex', justifyContent: 'center', padding: '4px 16px'}}>
+          <Button variant="primary" onClick={handleOnOK} style={{padding: '6px 30px'}}>
+            OK
           </Button>
         </Modal.Footer>
       </Modal>

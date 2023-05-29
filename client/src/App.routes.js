@@ -31,7 +31,7 @@ function AppRoutes() {
         <Route path="/favourites/:page" element={<FavouriteAnime />} />
         <Route path="/top100/:page" element={<Top100Anime />} />
         <Route path="/movies" element={<PopularMovies />} />
-        <Route path="/recommend" element={<RecommendAnime />} />
+        <Route path="/recommend/:page" element={<RecommendAnime />} />
         <Route path="/search/:name" element={<SearchResults />} />
         <Route path="/category/:slug" element={<AnimeDetails />} />
         <Route path="/watch/:episode" element={<WatchAnime />} />

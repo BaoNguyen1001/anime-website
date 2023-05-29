@@ -10,7 +10,7 @@ AuthMiddleware.isAuth = async (req, res, next) => {
 		if (!accessTokenFromHeader) {
 			return res
 				.status(401)
-				.json({error: 'Not found the access token'});
+				.json({error: 'Please login to use this feature'});
 		}
 	
 		const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
@@ -21,8 +21,8 @@ AuthMiddleware.isAuth = async (req, res, next) => {
 		);
 		if (!verified) {
 			return res
-				.status(401)
-				.json({error: 'Not found the access token'});
+				.status(403)
+				.json({error: 'The access token is expired'});
 		}
 	
 		const user = await UserModel.findOne({

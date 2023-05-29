@@ -1,29 +1,42 @@
 import api from './Api.service';
+import { store, showDialog } from '../store'
 
-const getRating = async (id, setNotAvailable, setRating) => {
-  return await api.get(`/movie/rating/${id}`)
-    .then((response) => {
-      const { rating } = response.data;
-      if(rating) {
-        setRating(rating);
-      }
+const getRating = async (id) => {
+  const response = await api.get(`/movie/rating/${id}`)
+    .then((res) => {
+      return res;
     })
     .catch((err) => {
-      setNotAvailable(err.response.data.error);
+      const { error } = err.response.data;
+      store.dispatch(showDialog({
+        title: 'Error message',
+        msgs: error,
+      }))
+  
+      throw err;
     })
+
+  return response;
 }
 
-const updateRating = async (id, rating, setRating) => {
-  return await api.post(`/movie/rating/${id}`, {
+const updateRating = async (id, rating) => {
+  const response =  await api.post(`/movie/rating/${id}`, {
     rating,
   })
-  .then(() => {
-    setRating(rating);
-    return true;
+  .then((res) => {
+    return res;
   })
-  .catch(() => {
-    return false;
+  .catch((err) => {
+    const { error } = err.response.data;
+    store.dispatch(showDialog({
+      title: 'Error message',
+      msgs: error,
+    }))
+
+    throw err;
   })
+
+  return response;
 }
 
 

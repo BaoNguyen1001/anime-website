@@ -14,15 +14,14 @@ function Nav() {
     <div>
       <NavBar>
         <Link to="/">
-          {/* <img src="./assets/logo.svg" alt="Logo Here" /> */}
-          Home
+          <img src="./assets/logo.svg" alt="Logo Here" />
         </Link>
         <div className="nav-links">
           <Links to="/trending/1">Trending</Links>
           <Links to="/popular/1">Popular</Links>
           <Links to="/favourites/1">Favourites</Links>
           <Links to="/movies">Top Movies</Links>
-          <Links to="/recommend">Recommend</Links>
+          <Links to="/recommend/1">Recommend</Links>
         </div>
 
         <NavBarRight>
