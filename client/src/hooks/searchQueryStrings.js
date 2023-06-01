@@ -173,6 +173,21 @@ export let searchByIdQuery = `
 				extraLarge
 				large
 			}
+			relations{
+				nodes{
+					idMal
+					title{
+						userPreferred
+					}
+					format
+					type
+					status(version:2)
+					bannerImage
+					coverImage{
+						large
+					}
+				}
+		}
 		}
 	}
 `;
