@@ -175,6 +175,7 @@ export let searchByIdQuery = `
 			}
 			relations{
 				nodes{
+					id
 					idMal
 					title{
 						userPreferred
@@ -244,7 +245,6 @@ export let searchWatchedId = `
 // 	}
 // `;
 
-
 export let TopRecommendByIdQuery = `
 	query($ids: [Int], $perPage: Int, $page: Int) {
 		Page(page: $page, perPage: $perPage) {
@@ -266,10 +266,10 @@ export let TopRecommendByIdQuery = `
 		}
 		genres: GenreCollection
 	}
-`
+`;
 
 export let GenresCollectionQuery = `
 	query() {
 		genres: GenreCollection
 	}
-`
+`;

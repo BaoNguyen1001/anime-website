@@ -1,7 +1,10 @@
 .star-rating {
-  position: absolute;
+  /* position: absolute;
   left: 110px;
-  top: -15px;
+  top: -15px; */
+}
+.star-rating button {
+  margin-bottom: 0;
 }
 
 .star {

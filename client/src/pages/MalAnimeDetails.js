@@ -20,7 +20,7 @@ function MalAnimeDetails() {
   const [notAvailable, setNotAvailable] = useState(false);
   const [rating, setRating] = useState(0);
   const [subTask, setSubTask] = useState(true);
-  
+
   useEffect(() => {
     getInfo();
   }, [id]);
@@ -34,6 +34,7 @@ function MalAnimeDetails() {
       setNotAvailable(true);
       return;
     }
+    setLoading(true);
     const aniRes = await axios({
       url: process.env.REACT_APP_BASE_URL,
       method: "POST",
@@ -63,19 +64,23 @@ function MalAnimeDetails() {
       });
     setMalResponse(malRes.data);
 
-    const { data: {data: rating} } = await MovieService.getRating(id);
-    if(rating) {
-      setRating(rating)
+    const {
+      data: { data: rating },
+    } = await MovieService.getRating(id);
+    if (rating) {
+      setRating(rating);
     }
     setLoading(false);
   }
 
   const updateRating = async (newRating) => {
-    const {data: {data: rating}} = await MovieService.updateRating(id, newRating);
+    const {
+      data: { data: rating },
+    } = await MovieService.updateRating(id, newRating);
     if (rating) {
-      setRating(rating)
+      setRating(rating);
     }
-  }
+  };
 
   return (
     <div>
@@ -99,176 +104,231 @@ function MalAnimeDetails() {
                 alt=""
               />
               <ContentWrapper>
-                <Poster>
-                  <img src={anilistResponse.coverImage.extraLarge} alt="" />
-                  <Button to={`/play/${malResponse.subLink}/1`}>
-                    Watch Sub
-                  </Button>
-                  {malResponse.isDub && (
-                    <Button
-                      className="outline"
-                      to={`/play/${malResponse.dubLink}/1`}
-                    >
-                      Watch Dub
-                    </Button>
-                  )}
-                </Poster>
-                <div className="anime-info">
-                  <h1>{anilistResponse.title.userPreferred}</h1>
-                  {anilistResponse.title.english != null && (
-                    <h3>{"English - " + anilistResponse.title.english}</h3>
-                  )}
-                  <p>
-                    <span>Type: </span>
-                    {anilistResponse.type}
-                  </p>
-                  {width <= 600 && expanded && (
-                    <section>
-                      <p
-                        dangerouslySetInnerHTML={{
-                          __html: `<span>Plot Summery: </span>${anilistResponse.description}`,
-                        }}
-                      ></p>
-                      <button onClick={() => readMoreHandler()}>
-                        read less
-                      </button>
-                    </section>
-                  )}
-
-                  {width <= 600 && !expanded && (
-                    <p>
-                      <span>Plot Summery: </span>
-                      {anilistResponse.description.substring(0, 200) + "... "}
-                      <button onClick={() => readMoreHandler()}>
-                        read more
-                      </button>
-                    </p>
-                  )}
-                  {width > 600 && (
-                    <p
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          "<span>Plot Summery: </span>" +
-                          anilistResponse.description,
-                      }}
-                    ></p>
-                  )}
-
-                  <p>
-                    <span>Genre: </span>
-                    {anilistResponse.genres.toString()}
-                  </p>
-                  <p>
-                    <span>Released: </span>
-                    {anilistResponse.startDate.year}
-                  </p>
-                  <p>
-                    <span>Status: </span>
-                    {anilistResponse.status}
-                  </p>
-                  <p>
-                    <span>Number of Sub Episodes: </span>
-                    {malResponse.subTotalEpisodes}
-                  </p>
-                  {malResponse.isDub && (
-                    <p>
-                      <span>Number of Dub Episodes: </span>
-                      {malResponse.dubTotalEpisodes}
-                    </p>
-                  )}
-                  <p className="your-rating">
-                    <span>Your rating: </span>
-                    <StarRating rating={rating} updateRating={updateRating}/>
-                  </p>
-                  <hr style={{color: 'white'}}/>
-                  <NavBar>
-                    <div className="nav-links">
-                      <Links to={''} onClick={() => setSubTask(true)}>Overview</Links>
-                      <Links to={''} onClick={() => setSubTask(false)}>Watch</Links>
-                    </div>
-                  </NavBar>
-                  {subTask ? (
-                    <RelationsCards>
-                      <p>Relations</p>
-                      <CardWrapper>
-                        {anilistResponse.relations.nodes.filter((item) => item.type === 'ANIME').map((item) => (
-                          <Links to={"/id/" + item.idMal} className="relation-items">
-                            <img src={item.coverImage.large} alt=""/>
-                            <p style={{marginBottom: 0}}>{item.title.userPreferred}</p>
-                          </Links>
-                        ))}
-                      </CardWrapper>
-                    </RelationsCards>
-                  ) :
-                  (
-                    <Episode>
-                      <DubContainer>
-                        <h2>Episodes</h2>
+                <div className="">
+                  <div className="row mb-0">
+                    <div className="col-2" style={{ position: "relative" }}>
+                      <Poster>
+                        <img
+                          src={anilistResponse.coverImage.extraLarge}
+                          alt=""
+                        />
+                        <Button to={`/play/${malResponse.subLink}/1`}>
+                          Watch Sub
+                        </Button>
                         {malResponse.isDub && (
-                          <div className="switch">
-                            <label for="switch">
-                              <input
-                                type="checkbox"
-                                id="switch"
-                                onChange={(e) => setDub(!dub)}
-                              ></input>
-                              <span className="indicator"></span>
-                              <span className="label">{dub ? "Dub" : "Sub"}</span>
-                            </label>
-                          </div>
+                          <Button
+                            className="outline"
+                            to={`/play/${malResponse.dubLink}/1`}
+                          >
+                            Watch Dub
+                          </Button>
                         )}
-                      </DubContainer>
-                      {width > 600 && (
-                        <Episodes>
-                          {malResponse.isDub &&
-                            dub &&
-                            [...Array(malResponse.dubTotalEpisodes)].map((x, i) => (
-                              <EpisodeLink
-                                to={`/play/${malResponse.dubLink}/${parseInt(i) + 1}`}
-                              >
-                                Episode {i + 1}
-                              </EpisodeLink>
-                            ))}
+                      </Poster>
+                    </div>
+                    <div className="col-10">
+                      <div className="anime-other-info">
+                        <h1>{anilistResponse.title.userPreferred}</h1>
+                        {anilistResponse.title.english != null && (
+                          <h3>
+                            {"English - " + anilistResponse.title.english}
+                          </h3>
+                        )}
+                        {width <= 600 && expanded && (
+                          <section>
+                            <p
+                              dangerouslySetInnerHTML={{
+                                __html: `<span>Plot Summery: </span>${anilistResponse.description}`,
+                              }}
+                            ></p>
+                            <button onClick={() => readMoreHandler()}>
+                              read less
+                            </button>
+                          </section>
+                        )}
 
-                          {!dub &&
-                            [...Array(malResponse.subTotalEpisodes)].map((x, i) => (
-                              <EpisodeLink
-                                to={`/play/${malResponse.subLink}/${parseInt(i) + 1}`}
-                              >
-                                Episode {i + 1}
-                              </EpisodeLink>
+                        {width <= 600 && !expanded && (
+                          <p>
+                            <span>Plot Summery: </span>
+                            {anilistResponse.description.substring(0, 200) +
+                              "... "}
+                            <button onClick={() => readMoreHandler()}>
+                              read more
+                            </button>
+                          </p>
+                        )}
+                        {width > 600 && (
+                          <p
+                            dangerouslySetInnerHTML={{
+                              __html:
+                                "<span>Plot Summery: </span>" +
+                                anilistResponse.description,
+                            }}
+                          ></p>
+                        )}
+                      </div>
+                    </div>
+                    <NavBar>
+                      <div className="nav-links">
+                        <Links to={""} onClick={() => setSubTask(true)}>
+                          Overview
+                        </Links>
+                        <Links to={""} onClick={() => setSubTask(false)}>
+                          Watch
+                        </Links>
+                      </div>
+                    </NavBar>
+                  </div>
+
+                  <hr style={{ color: "white" }} />
+                  <div className="row">
+                    <div className="col-2">
+                      <MainInfo>
+                        <ul className="anime-main-info">
+                          <li className="your-rating">
+                            <StarRating
+                              rating={rating}
+                              updateRating={updateRating}
+                              unRating={false}
+                            />
+                          </li>
+                          <li>
+                            <span>Type</span>
+                            <p>{anilistResponse.type}</p>
+                          </li>
+                          <li>
+                            <span>Genre</span>
+                            {anilistResponse.genres.map((item) => (
+                              <p>{item}</p>
                             ))}
-                        </Episodes>
+                          </li>
+                          <li>
+                            <span>Released</span>
+                            <p>{anilistResponse.startDate.year}</p>
+                          </li>
+                          <li>
+                            <span>Status</span>
+                            <p>{anilistResponse.status}</p>
+                          </li>
+                          <li>
+                            <span>Sub Episodes</span>
+                            <p>{malResponse.subTotalEpisodes}</p>
+                          </li>
+                          {malResponse.isDub && (
+                            <li>
+                              <span>Dub Episodes</span>
+                              <p>{malResponse.dubTotalEpisodes}</p>
+                            </li>
+                          )}
+                        </ul>
+                      </MainInfo>
+                    </div>
+                    <div className="col-10">
+                      {subTask ? (
+                        <RelationsCards>
+                          <p>Relations</p>
+                          <CardWrapper>
+                            {anilistResponse.relations.nodes
+                              .filter(
+                                (item) => item.type === "ANIME" && item.idMal
+                              )
+                              .map((item) => (
+                                <Links
+                                  to={"/id/" + item.idMal}
+                                  className="relation-items"
+                                >
+                                  <img src={item.coverImage.large} alt="" />
+                                  <p style={{ marginBottom: 0 }}>
+                                    {item.title.userPreferred}
+                                  </p>
+                                </Links>
+                              ))}
+                          </CardWrapper>
+                        </RelationsCards>
+                      ) : (
+                        <Episode>
+                          <DubContainer>
+                            <p>Episodes</p>
+                            {malResponse.isDub && (
+                              <div className="switch">
+                                <label for="switch">
+                                  <input
+                                    type="checkbox"
+                                    id="switch"
+                                    onChange={(e) => setDub(!dub)}
+                                  ></input>
+                                  <span className="indicator"></span>
+                                  <span className="label">
+                                    {dub ? "Dub" : "Sub"}
+                                  </span>
+                                </label>
+                              </div>
+                            )}
+                          </DubContainer>
+                          {width > 600 && (
+                            <Episodes>
+                              {malResponse.isDub &&
+                                dub &&
+                                [...Array(malResponse.dubTotalEpisodes)].map(
+                                  (x, i) => (
+                                    <EpisodeLink
+                                      to={`/play/${malResponse.dubLink}/${
+                                        parseInt(i) + 1
+                                      }`}
+                                    >
+                                      Episode {i + 1}
+                                    </EpisodeLink>
+                                  )
+                                )}
+
+                              {!dub &&
+                                [...Array(malResponse.subTotalEpisodes)].map(
+                                  (x, i) => (
+                                    <EpisodeLink
+                                      to={`/play/${malResponse.subLink}/${
+                                        parseInt(i) + 1
+                                      }`}
+                                    >
+                                      Episode {i + 1}
+                                    </EpisodeLink>
+                                  )
+                                )}
+                            </Episodes>
+                          )}
+                          {width <= 600 && (
+                            <Episodes>
+                              {malResponse.isDub &&
+                                dub &&
+                                [...Array(malResponse.dubTotalEpisodes)].map(
+                                  (x, i) => (
+                                    <EpisodeLink
+                                      to={`/play/${malResponse.dubLink}/${
+                                        parseInt(i) + 1
+                                      }`}
+                                    >
+                                      {i + 1}
+                                    </EpisodeLink>
+                                  )
+                                )}
+
+                              {!dub &&
+                                [...Array(malResponse.subTotalEpisodes)].map(
+                                  (x, i) => (
+                                    <EpisodeLink
+                                      to={`/play/${malResponse.subLink}/${
+                                        parseInt(i) + 1
+                                      }`}
+                                    >
+                                      {i + 1}
+                                    </EpisodeLink>
+                                  )
+                                )}
+                            </Episodes>
+                          )}
+                        </Episode>
                       )}
-                      {width <= 600 && (
-                        <Episodes>
-                          {malResponse.isDub &&
-                            dub &&
-                            [...Array(malResponse.dubTotalEpisodes)].map((x, i) => (
-                              <EpisodeLink
-                                to={`/play/${malResponse.dubLink}/${parseInt(i) + 1}`}
-                              >
-                                {i + 1}
-                              </EpisodeLink>
-                            ))}
-
-                          {!dub &&
-                            [...Array(malResponse.subTotalEpisodes)].map((x, i) => (
-                              <EpisodeLink
-                                to={`/play/${malResponse.subLink}/${parseInt(i) + 1}`}
-                              >
-                                {i + 1}
-                              </EpisodeLink>
-                            ))}
-                        </Episodes>
-                      )}
-                  </Episode>
-                 )}
-
+                    </div>
+                  </div>
                 </div>
-
-
-
               </ContentWrapper>
             </div>
           )}
@@ -287,13 +347,6 @@ const NotAvailable = styled.div`
   img {
     width: 30rem;
   }
-
-  h1 {
-    margin-top: -2rem;
-    font-weight: normal;
-    font-weight: 600;
-  }
-
   @media screen and (max-width: 600px) {
     img {
       width: 18rem;
@@ -308,12 +361,10 @@ const NotAvailable = styled.div`
 const DubContainer = styled.div`
   display: flex;
   gap: 1rem;
-  align-items: center;
-  margin-bottom: 0.5rem;
+  align-items: start;
 
   .switch {
     position: relative;
-
     label {
       display: flex;
       align-items: center;
@@ -324,7 +375,6 @@ const DubContainer = styled.div`
     }
 
     .label {
-      margin-bottom: 0.7rem;
       font-weight: 500;
     }
 
@@ -337,8 +387,6 @@ const DubContainer = styled.div`
       display: block;
       border-radius: 30px;
       margin-right: 10px;
-      margin-bottom: 10px;
-
       &:before {
         width: 22px;
         height: 22px;
@@ -371,10 +419,6 @@ const DubContainer = styled.div`
 `;
 
 const Episode = styled.div`
-  margin: 0 4rem 0 4rem;
-  padding: 2rem;
-  outline: 2px solid #272639;
-  border-radius: 0.5rem;
   color: white;
 
   h2 {
@@ -382,7 +426,6 @@ const Episode = styled.div`
     font-weight: 500;
     margin-bottom: 1rem;
   }
-  box-shadow: 0px 4.41109px 20.291px rgba(16, 16, 24, 0.81);
 
   @media screen and (max-width: 600px) {
     padding: 1rem;
@@ -392,13 +435,13 @@ const Episode = styled.div`
 
 const Episodes = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  grid-gap: 1rem;
-  grid-row-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, 160px);
+  grid-gap: 5px;
+  grid-row-gap: 5px;
   justify-content: space-between;
 
   @media screen and (max-width: 600px) {
-    grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr));
+    grid-template-columns: repeat(auto-fit, 4rem);
   }
 `;
 
@@ -407,7 +450,7 @@ const EpisodeLink = styled(Link)`
   color: white;
   text-decoration: none;
   background-color: #242235;
-  padding: 0.9rem 2rem;
+  padding: 1rem 1rem;
   font-weight: 500;
   border-radius: 0.5rem;
   border: 1px solid #393653;
@@ -441,7 +484,7 @@ const ContentWrapper = styled.div`
     margin-bottom: 0.6rem;
   }
 
-  .anime-info {
+  .anime-other-info {
     margin: 1rem;
     font-size: 1rem;
     color: #b5c3de;
@@ -460,12 +503,12 @@ const ContentWrapper = styled.div`
     h3 {
       font-weight: 500;
     }
-    .your-rating {
-      position: relative;
-    }
-    .your-rating div {
-      margin: 0;
-    }
+    // .your-rating {
+    //   position: relative;
+    // }
+    // .your-rating div {
+    //   margin: 0;
+    // }
   }
 
   @media screen and (max-width: 600px) {
@@ -498,13 +541,15 @@ const ContentWrapper = styled.div`
 const Poster = styled.div`
   display: flex;
   flex-direction: column;
+  position: absolute;
+  bottom: 0;
   img {
     width: 220px;
     height: 300px;
     border-radius: 0.5rem;
-    margin-bottom: 3rem;
-    top: -60px;
-    position: relative;
+    // margin-bottom: 3rem;
+    // top: -60px;
+    // position: relative;
     filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
   }
   @media screen and (max-width: 600px) {
@@ -519,6 +564,36 @@ const Poster = styled.div`
   }
 `;
 
+const MainInfo = styled.div`
+
+  .anime-main-info {
+    
+    color: #b5c3de;
+    list-style:none;
+    margin: 0;
+    padding: 0;
+
+    li{
+      margin-top: 20px;
+      span {
+        font-weight: 700;
+        color: white;
+        font-size: 1rem;
+      }
+      p {
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+    }
+
+    .your-rating {
+      p {
+        font-size: 30px;
+        margin-bottom: 0;
+      }
+    }
+`;
+
 const Button = styled(Link)`
   font-size: 1.2rem;
   padding: 1rem 3.4rem;
@@ -528,14 +603,14 @@ const Button = styled(Link)`
   background-color: #7676ff;
   font-weight: 700;
   border-radius: 0.4rem;
-  position: relative;
-  top: -90px;
-  white-space: nowrap;
+  // position: relative;
+  // top: -90px;
+  // white-space: nowrap;
 
-  @media screen and (max-width: 600px) {
-    display: block;
-    width: 100%;
-  }
+  // @media screen and (max-width: 600px) {
+  //   display: block;
+  //   width: 100%;
+  // }
 `;
 
 const Banner = styled.img`
@@ -561,12 +636,13 @@ const NavBar = styled.nav`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0.5rem 5rem 1rem 5rem;
+  margin: 0.5rem 5rem 0 5rem;
+  margin-bottom: 0 !important;
 `;
 
 const RelationsCards = styled.div`
   color: white;
-`
+`;
 const CardWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, 110px);

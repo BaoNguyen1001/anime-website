@@ -5,7 +5,7 @@ import {Button} from 'react-bootstrap';
 import "./starRating.css";
 
 const StarRating = (props) => {
-  const { rating } = props;
+  const { rating, unRating } = props;
   //const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [previousRating, setPreviousRating] = useState(0);
@@ -39,9 +39,12 @@ const StarRating = (props) => {
           </CustomButton>
         );
       })}
-      <Button className="un-rating" onClick={() => updateRating(0)} size="sm">
-        <span>Unrating</span>
-      </Button>
+      {unRating && (
+        <Button className="un-rating" onClick={() => updateRating(0)} size="sm">
+          <span>Unrating</span>
+        </Button>
+      )}
+ 
     </div>
   );
 };
