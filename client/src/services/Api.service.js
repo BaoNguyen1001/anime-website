@@ -41,7 +41,9 @@ instance.interceptors.response.use(
           refreshToken: TokenService.getRefreshToken(),
         });
 
-        const { data: accessToken } = rs;
+        const {
+          data: { data: accessToken },
+        } = rs;
         TokenService.updateAccessToken(accessToken);
         return instance(originalConfig);
       } catch (_error) {
