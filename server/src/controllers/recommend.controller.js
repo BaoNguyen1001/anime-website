@@ -49,7 +49,7 @@ RecommendController.getRecommend = async (req, res) => {
   });
 
   if (!userPredicts) {
-    return response(res, 404, {}, "Not found the user");
+    return response(res, 200, { recommendations: [] });
   }
   const endTime = new Date();
   console.log("Execute time: ", endTime.getTime() - startTime.getTime());
@@ -69,7 +69,7 @@ RecommendController.getTopRatingByUserId = async (req, res) => {
   });
 
   if (!userPredicts) {
-    return response(res, 404, {}, "Not found the user");
+    return response(res, 200, { recommendations: [] });
   }
 
   const recommendResult = roundingRating(userPredicts.recommendations);

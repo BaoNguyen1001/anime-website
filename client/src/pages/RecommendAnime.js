@@ -217,16 +217,18 @@ function RecommendAnime() {
               </Links>
             ))}
           </CardWrapper>
-          <NavButtons>
-            {page > 1 && (
-              <NavButton to={"/recommend/" + (parseInt(page) - 1)}>
-                Previous
+          {animeDetails.length > 0 && (
+            <NavButtons>
+              {page > 1 && (
+                <NavButton to={"/recommend/" + (parseInt(page) - 1)}>
+                  Previous
+                </NavButton>
+              )}
+              <NavButton to={"/recommend/" + (parseInt(page) + 1)}>
+                Next
               </NavButton>
-            )}
-            <NavButton to={"/recommend/" + (parseInt(page) + 1)}>
-              Next
-            </NavButton>
-          </NavButtons>
+            </NavButtons>
+          )}
         </Parent>
       )}
     </div>
