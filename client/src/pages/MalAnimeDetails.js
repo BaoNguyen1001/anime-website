@@ -1,11 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { showDialog } from "../store";
 import styled from "styled-components";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { searchByIdQuery } from "../hooks/searchQueryStrings";
 import MovieService from "../services/Movie.service";
-
 import AnimeDetailsSkeleton from "../components/skeletons/AnimeDetailsSkeleton";
 import StarRating from "../components/Rating/StarRating";
 
@@ -14,12 +15,18 @@ function MalAnimeDetails() {
   const [loading, setLoading] = useState(true);
   const { width } = useWindowDimensions();
   const [anilistResponse, setAnilistResponse] = useState();
-  const [malResponse, setMalResponse] = useState();
+  const [malResponse, setMalResponse] = useState({
+    subLink: "",
+    isDub: false,
+    subTotalEpisodes: 0,
+    dubTotalEpisodes: 0,
+  });
   const [expanded, setExpanded] = useState(false);
   const [dub, setDub] = useState(false);
   const [notAvailable, setNotAvailable] = useState(false);
   const [rating, setRating] = useState(0);
   const [subTask, setSubTask] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getInfo();
@@ -59,10 +66,12 @@ function MalAnimeDetails() {
       .get(`${process.env.REACT_APP_BACKEND_URL}api/getidinfo?malId=${id}`)
       .catch((err) => {
         setLoading(false);
-        setNotAvailable(true);
-        console.log(err);
+        // setNotAvailable(true);
       });
-    setMalResponse(malRes.data);
+
+    if (malRes?.data) {
+      setMalResponse(malRes.data);
+    }
 
     const {
       data: { data: rating },
@@ -79,6 +88,18 @@ function MalAnimeDetails() {
     } = await MovieService.updateRating(id, newRating);
     if (rating) {
       setRating(rating);
+    }
+  };
+
+  const handleWatchValidation = (e) => {
+    if (!malResponse.subLink) {
+      e.preventDefault();
+      dispatch(
+        showDialog({
+          title: "Error",
+          msgs: "This anime is unavailable, sorry for this inconvenience!",
+        })
+      );
     }
   };
 
@@ -104,7 +125,7 @@ function MalAnimeDetails() {
                 alt=""
               />
               <ContentWrapper>
-                <div className="">
+                <div className="col">
                   <div className="row mb-0">
                     <div className="col-2" style={{ position: "relative" }}>
                       <Poster>
@@ -112,7 +133,10 @@ function MalAnimeDetails() {
                           src={anilistResponse.coverImage.extraLarge}
                           alt=""
                         />
-                        <Button to={`/play/${malResponse.subLink}/1`}>
+                        <Button
+                          to={`/play/${malResponse.subLink}/1`}
+                          onClick={handleWatchValidation}
+                        >
                           Watch Sub
                         </Button>
                         {malResponse.isDub && (

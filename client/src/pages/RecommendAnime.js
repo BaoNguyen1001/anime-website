@@ -6,26 +6,27 @@ import {
   DefaultDropDownList,
   DefaultTextInput,
   DefaultRangeInput,
-} from '../components/Base/index';
-import { BiSearch } from 'react-icons/bi'
+} from "../components/Base/index";
+import { BiSearch } from "react-icons/bi";
 import SearchResultsSkeleton from "../components/skeletons/SearchResultsSkeleton";
 import { TopRecommendByIdQuery } from "../hooks/searchQueryStrings";
 import PredictService from "../services/Predict.service";
+import { DefaultButton } from "../components/Base/DefaultButton";
 
 function RecommendAnime() {
   let page = useParams().page;
   const [animeDetails, setAnimeDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState({
-    animeName: '',
+    animeName: "",
     genres: {
-      selected: '',
+      selected: "",
       listGenres: [],
     },
     rating: {
       minValue: 0,
       maxValue: 5,
-    }
+    },
   });
 
   useEffect(() => {
@@ -36,7 +37,7 @@ function RecommendAnime() {
     setLoading(true);
     window.scrollTo(0, 0);
     const adminesRecommend = await getRecommendAnime();
-    const animesId  = getAnimesId(adminesRecommend);
+    const animesId = getAnimesId(adminesRecommend);
     const res = await axios({
       url: process.env.REACT_APP_BASE_URL,
       method: "POST",
@@ -55,36 +56,43 @@ function RecommendAnime() {
     }).catch((err) => {
       console.log(err);
     });
-    const animeList = res.data.data.Page.media.map((item) => {
-      const newItem = {...item};
-      newItem.rating = adminesRecommend.find(item => item.movieId === newItem.idMal).rating;
-      return newItem;
-    }).sort((a, b) => b.rating - a.rating);
+    const animeList = res.data.data.Page.media
+      .map((item) => {
+        const newItem = { ...item };
+        newItem.rating = adminesRecommend.find(
+          (item) => item.movieId === newItem.idMal
+        ).rating;
+        return newItem;
+      })
+      .sort((a, b) => b.rating - a.rating);
 
     setAnimeDetails(animeList);
     setFilter({
       ...filter,
       genres: {
         ...filter.genres,
-        listGenres: res.data.data.genres
-      }
-    })
+        listGenres: res.data.data.genres,
+      },
+    });
     setLoading(false);
     document.title = "Recommend Anime - Miyou";
   }
 
   const getRecommendAnime = async () => {
-    const {data: {data: result}} = await PredictService.getRecommendIdByUser();
+    const {
+      data: { data: result },
+    } = await PredictService.getRecommendIdByUser();
     return result;
-  }
+  };
 
   const getAnimesId = (animeList) => {
-    const ids = [...animeList.map((item) => {
-      return item.movieId
-    })]
+    const ids = [
+      ...animeList.map((item) => {
+        return item.movieId;
+      }),
+    ];
     return ids;
-  }
-
+  };
 
   const updateFilterParams = (name, value, filterName = null) => {
     if (filterName) {
@@ -93,50 +101,58 @@ function RecommendAnime() {
         [filterName]: {
           ...filter[filterName],
           [name]: value,
-        }
-      })
+        },
+      });
     } else {
       setFilter({
         ...filter,
         [name]: value,
-      })
+      });
     }
   };
 
   const filterData = (item) => {
-    const {animeName, genres: {selected: genreSelected}, rating: {minValue, maxValue}} = filter;
-    const titleLanguage = item.title.english ? 'english' : 'userPreferred';
+    const {
+      animeName,
+      genres: { selected: genreSelected },
+      rating: { minValue, maxValue },
+    } = filter;
+    const titleLanguage = item.title.english ? "english" : "userPreferred";
     const filterMethod = [
-      (item => item.title[titleLanguage].toLowerCase().includes(animeName.toLowerCase())),
-      (item => genreSelected ? item.genres.includes(genreSelected) : true),
-      (item => item.rating >= minValue && item.rating <= maxValue),
-    ]
+      (item) =>
+        item.title[titleLanguage]
+          .toLowerCase()
+          .includes(animeName.toLowerCase()),
+      (item) => (genreSelected ? item.genres.includes(genreSelected) : true),
+      (item) => item.rating >= minValue && item.rating <= maxValue,
+    ];
 
-    const result =  filterMethod.map((method) => {
+    const result = filterMethod.map((method) => {
       if (method(item)) {
         return true;
       }
       return false;
-    })
+    });
 
-    return !result.includes(false)
-  }
+    return !result.includes(false);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     updateFilterParams(name, value);
-
-  }
+  };
 
   const handleDropDownChange = (e) => {
     const { filterName, name, value } = e.target;
     updateFilterParams(name, value, filterName);
-  }
+  };
 
   const handleRangeChange = (e) => {
     const { filterName, name, value } = e.target;
     updateFilterParams(name, value, filterName);
-  }
+  };
+
+  const handleRecommendBtn = () => {};
 
   return (
     <div>
@@ -151,14 +167,12 @@ function RecommendAnime() {
               <ItemWrapper>
                 <p className="label-name">Search</p>
                 <DefaultTextInput
-                  type="text"
-                  icon={<BiSearch/>}
+                  icon={<BiSearch />}
                   value={filter?.animeName}
                   onChange={handleInputChange}
                   name="animeName"
                 />
               </ItemWrapper>
-
               <ItemWrapper>
                 <p className="label-name">Genres</p>
                 <DefaultDropDownList
@@ -168,7 +182,6 @@ function RecommendAnime() {
                   filterName="genres"
                 />
               </ItemWrapper>
-              
               <ItemWrapper>
                 <DefaultRangeInput
                   filterName="rating"
@@ -177,6 +190,13 @@ function RecommendAnime() {
                   max={5}
                   value={filter?.rating}
                   onChange={handleRangeChange}
+                />
+              </ItemWrapper>
+              <ItemWrapper>
+                <DefaultButton
+                  label="Recommend"
+                  name="recommendBtn"
+                  onChange={handleRecommendBtn}
                 />
               </ItemWrapper>
             </FilterWrapper>
@@ -188,7 +208,9 @@ function RecommendAnime() {
             {animeDetails.filter(filterData).map((item, i) => (
               <Links to={"/id/" + item.idMal}>
                 <img src={item.coverImage.large} alt="" />
-                <p style={{marginBottom: 0}}>{item.title?.english || item.title?.userPreferred}</p>
+                <p style={{ marginBottom: 0 }}>
+                  {item.title?.english || item.title?.userPreferred}
+                </p>
                 <p>Rating: {item.rating}</p>
               </Links>
             ))}
@@ -199,8 +221,9 @@ function RecommendAnime() {
                 Previous
               </NavButton>
             )}
-            <NavButton to={"/recommend/" + (parseInt(page) + 1)}>Next</NavButton>
-            
+            <NavButton to={"/recommend/" + (parseInt(page) + 1)}>
+              Next
+            </NavButton>
           </NavButtons>
         </Parent>
       )}
@@ -218,7 +241,7 @@ const CardWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, 160px);
   grid-gap: 1rem;
-  grid-row-gap: 1.5rem;
+  grid-row-gap: 1rem;
   justify-content: space-between;
 
   @media screen and (max-width: 600px) {
@@ -264,7 +287,8 @@ const Links = styled(Link)`
 
   p {
     color: white;
-    font-size: 1rem;
+    font-size: 13px;
+    padding-top: 5px;
     font-weight: 400;
     text-decoration: none;
     max-width: 160px;
@@ -288,21 +312,21 @@ const Heading = styled.p`
     font-size: 1.6rem;
     margin-bottom: 1rem;
   }
-`
+`;
 
 const FilterWrapper = styled.div`
   display: grid;
   grid-gap: 24px;
-  grid-template-columns: 200px 200px 424px;
-  align-items: center;
+  grid-template-columns: 200px 200px 424px 200px;
+  align-items: end;
   margin-bottom: 50px;
-`
+`;
 
 const ItemWrapper = styled.div`
   color: white;
   margin-right: 25px;
   font-size: 13px;
-`
+`;
 
 const NavButtons = styled.div`
   margin-top: 2.5rem;
