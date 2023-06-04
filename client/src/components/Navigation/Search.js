@@ -108,7 +108,11 @@ const Content = styled.div`
   background-color: #1a1927;
   padding: 0rem 4rem 3.8rem 4rem;
   border-radius: 0.5rem;
-
+  :hover {
+    button {
+      background-color: #7660ff;
+    }
+  }
   .main {
     background-color: white;
     padding: 0.5rem;

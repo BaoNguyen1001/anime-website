@@ -1,4 +1,5 @@
 import axios from "axios";
+import api from "../services/Api.service";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -38,8 +39,9 @@ function RecommendAnime() {
     window.scrollTo(0, 0);
     const adminesRecommend = await getRecommendAnime();
     const animesId = getAnimesId(adminesRecommend);
-    const res = await axios({
-      url: process.env.REACT_APP_BASE_URL,
+    const res = await api({
+      baseURL: process.env.REACT_APP_BASE_URL,
+      url: "",
       method: "POST",
       headers: {
         "Content-Type": "application/json",

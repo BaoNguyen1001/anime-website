@@ -97,6 +97,10 @@ const DropDown = styled.div`
   cursor: pointer;
   margin-left: 15px;
 
+  :hover {
+    background-color: #7660ff;
+  }
+
   .profile-icon {
     font-size: 20px;
   }

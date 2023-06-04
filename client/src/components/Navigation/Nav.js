@@ -58,9 +58,8 @@ function Nav() {
               </Button>
             </IconContext.Provider>
           )}
-          <User/>
+          <User />
         </NavBarRight>
-
       </NavBar>
       {isActive && <Search isActive={isActive} setIsActive={setIsActive} />}
       {isActive && <Shadow></Shadow>}
@@ -93,6 +92,9 @@ const Button = styled.button`
     font-size: 1rem;
   }
   white-space: nowrap;
+  :hover {
+    background-color: #7660ff;
+  }
   @media screen and (max-width: 600px) {
     padding: 0.5rem;
     padding-right: 0;
@@ -126,6 +128,6 @@ const NavBar = styled.nav`
 
 const NavBarRight = styled.div`
   display: flex;
-`
+`;
 
 export default Nav;
