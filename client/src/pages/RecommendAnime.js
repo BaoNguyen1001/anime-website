@@ -7,7 +7,7 @@ import {
   DefaultDropDownList,
   DefaultTextInput,
   DefaultRangeInput,
-} from "../components/Base/index";
+} from "../components/Base";
 import { BiSearch } from "react-icons/bi";
 import SearchResultsSkeleton from "../components/skeletons/SearchResultsSkeleton";
 import { TopRecommendByIdQuery } from "../hooks/searchQueryStrings";

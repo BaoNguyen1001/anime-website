@@ -17,7 +17,7 @@ import GlobalStyle from "./styles/globalStyles";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import RecommendAnime from "./pages/RecommendAnime";
-import DefaultLoading from "./components/Base/DefaultLoading";
+import { DefaultLoading } from "./components/Base";
 
 function AppRoutes() {
   return (

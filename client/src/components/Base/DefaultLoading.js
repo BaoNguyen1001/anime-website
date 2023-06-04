@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import "./style.scss";
 // Loading indicator
-const DefaultLoading = (props) => {
+export function DefaultLoading(props) {
   const {
     // isNotLoginScreen,
     opacity,
@@ -36,6 +36,4 @@ const DefaultLoading = (props) => {
   );
 
   return ReactDOM.createPortal(loadingPanel, gridContent);
-};
-
-export default DefaultLoading;
+}

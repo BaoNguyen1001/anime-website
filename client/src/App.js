@@ -6,7 +6,7 @@ import { hideDialog, AppSelector } from "./store";
 import AuthService from "./services/Auth.service";
 import AppRoutes from "./App.routes";
 import CustomDialog from "./components/Dialog/CustomDialog";
-import DefaultLoading from "./components/Base/DefaultLoading";
+import { DefaultLoading } from "./components/Base";
 
 function App(props) {
   useEffect(() => {
