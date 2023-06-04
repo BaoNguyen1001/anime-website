@@ -1,15 +1,15 @@
 import styled from "styled-components";
 
 export function DefaultButton(props) {
-  const { name, onChange, label } = props;
+  const { name, onClick, label } = props;
 
-  const handleOnChange = (e) => {
-    onChange(e);
+  const handleOnClick = (e) => {
+    onClick(e);
   };
 
   return (
     <ButtonItem>
-      <button onChange={handleOnChange} name={name}>
+      <button onClick={handleOnClick} name={name}>
         {label}
       </button>
     </ButtonItem>

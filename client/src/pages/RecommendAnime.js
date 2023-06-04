@@ -30,14 +30,25 @@ function RecommendAnime() {
   });
 
   useEffect(() => {
-    getAnime();
+    getInitialAnime();
   }, [page]);
 
-  async function getAnime() {
+  const getInitialAnime = async () => {
     setLoading(true);
     window.scrollTo(0, 0);
-    const adminesRecommend = await getRecommendAnime();
-    const animesId = getAnimesId(adminesRecommend);
+    const animeRecommends = await PredictService.getRecommendIdByUser();
+    handleLoadData(animeRecommends);
+    setLoading(false);
+    document.title = "Recommend Anime - Miyou";
+  };
+
+  const getNewRecommendBtn = async () => {
+    const newPredicts = await PredictService.getNewRecommend();
+    handleLoadData(newPredicts);
+  };
+
+  const handleLoadData = async (animeRecommends) => {
+    const animeIds = getAnimeId(animeRecommends);
     const res = await axios({
       url: process.env.REACT_APP_BASE_URL,
       method: "POST",
@@ -48,7 +59,7 @@ function RecommendAnime() {
       data: {
         query: TopRecommendByIdQuery,
         variables: {
-          ids: animesId,
+          ids: animeIds,
           perPage: 50,
           page: page,
         },
@@ -59,7 +70,7 @@ function RecommendAnime() {
     const animeList = res.data.data.Page.media
       .map((item) => {
         const newItem = { ...item };
-        newItem.rating = adminesRecommend.find(
+        newItem.rating = animeRecommends.find(
           (item) => item.movieId === newItem.idMal
         ).rating;
         return newItem;
@@ -74,18 +85,9 @@ function RecommendAnime() {
         listGenres: res.data.data.genres,
       },
     });
-    setLoading(false);
-    document.title = "Recommend Anime - Miyou";
-  }
-
-  const getRecommendAnime = async () => {
-    const {
-      data: { data: result },
-    } = await PredictService.getRecommendIdByUser();
-    return result;
   };
 
-  const getAnimesId = (animeList) => {
+  const getAnimeId = (animeList) => {
     const ids = [
       ...animeList.map((item) => {
         return item.movieId;
@@ -152,8 +154,6 @@ function RecommendAnime() {
     updateFilterParams(name, value, filterName);
   };
 
-  const handleRecommendBtn = () => {};
-
   return (
     <div>
       {loading && <SearchResultsSkeleton name="Recommend Anime" />}
@@ -196,7 +196,7 @@ function RecommendAnime() {
                 <DefaultButton
                   label="Recommend"
                   name="recommendBtn"
-                  onChange={handleRecommendBtn}
+                  onClick={getNewRecommendBtn}
                 />
               </ItemWrapper>
             </FilterWrapper>
