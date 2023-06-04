@@ -9,7 +9,7 @@ export function DefaultButton(props) {
 
   return (
     <ButtonItem>
-      <button onChange={handleOnChange} name={name} id="recommend-btn">
+      <button onClick={handleOnClick} name={name} id="recommend-btn">
         {label}
       </button>
     </ButtonItem>
