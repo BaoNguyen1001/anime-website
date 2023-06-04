@@ -1,4 +1,5 @@
 import axios from "axios";
+import api from "../services/Api.service";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -14,7 +15,7 @@ function PopularMovies() {
 
   async function getAnime() {
     window.scrollTo(0, 0);
-    let res = await axios.get(
+    let res = await api.get(
       `${process.env.REACT_APP_BACKEND_URL}api/getmalinfo?criteria=movie&count=100`
     );
 

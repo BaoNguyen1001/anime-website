@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Carousel from "../components/Home/Carousel";
 import axios from "axios";
+import api from "../services/Api.service";
 import AnimeCards from "../components/Home/AnimeCards";
 import HomeSkeleton from "../components/skeletons/CarouselSkeleton";
 import useWindowDimensions from "../hooks/useWindowDimensions";
@@ -20,8 +21,9 @@ function Home() {
 
   async function getImages() {
     window.scrollTo(0, 0);
-    let result = await axios({
-      url: process.env.REACT_APP_BASE_URL,
+    let result = await api({
+      baseURL: process.env.REACT_APP_BASE_URL,
+      url: "",
       method: "POST",
       headers: {
         "Content-Type": "application/json",

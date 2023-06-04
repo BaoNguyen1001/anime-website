@@ -1,4 +1,5 @@
 import axios from "axios";
+import api from "../services/Api.service";
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -42,8 +43,9 @@ function MalAnimeDetails() {
       return;
     }
     setLoading(true);
-    const aniRes = await axios({
-      url: process.env.REACT_APP_BASE_URL,
+    const aniRes = await api({
+      baseURL: process.env.REACT_APP_BASE_URL,
+      url: "",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -62,7 +64,7 @@ function MalAnimeDetails() {
     });
     setAnilistResponse(aniRes.data.data.Media);
 
-    const malRes = await axios
+    const malRes = await api
       .get(`${process.env.REACT_APP_BACKEND_URL}api/getidinfo?malId=${id}`)
       .catch((err) => {
         setLoading(false);

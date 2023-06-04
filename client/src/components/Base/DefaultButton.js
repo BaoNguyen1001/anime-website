@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import "./style.scss";
 export function DefaultButton(props) {
   const { name, onClick, label } = props;
 
@@ -9,7 +9,7 @@ export function DefaultButton(props) {
 
   return (
     <ButtonItem>
-      <button onClick={handleOnClick} name={name}>
+      <button onChange={handleOnChange} name={name} id="recommend-btn">
         {label}
       </button>
     </ButtonItem>
