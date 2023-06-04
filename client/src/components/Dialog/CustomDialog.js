@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { VscError } from "react-icons/vsc";
 
-export default function CustomDialog({ onButtonClick, title, text, onOK }) {
+export default function CustomDialog({
+  onButtonClick,
+  title = "Error message",
+  text,
+  onOK,
+}) {
   const handleClose = (e) => {
     if (typeof onOK === "function") {
       onOK();

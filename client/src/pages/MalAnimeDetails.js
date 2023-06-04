@@ -75,9 +75,7 @@ function MalAnimeDetails() {
       setMalResponse(malRes.data);
     }
 
-    const {
-      data: { data: rating },
-    } = await MovieService.getRating(id);
+    const rating = await MovieService.getRating(id);
     if (rating) {
       setRating(rating);
     }
@@ -85,9 +83,7 @@ function MalAnimeDetails() {
   }
 
   const updateRating = async (newRating) => {
-    const {
-      data: { data: rating },
-    } = await MovieService.updateRating(id, newRating);
+    const rating = await MovieService.updateRating(id, newRating);
     if (rating) {
       setRating(rating);
     }

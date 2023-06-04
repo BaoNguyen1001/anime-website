@@ -1,6 +1,6 @@
 import axios from "axios";
 import TokenService from "./Token.service";
-import { store, actionLoading, actionLoaded } from "../store";
+import { store, actionLoading, actionLoaded, showDialog } from "../store";
 
 const instance = axios.create({
   baseURL: `${process.env.REACT_APP_AUTH_URL}/api`,
@@ -16,7 +16,6 @@ instance.interceptors.request.use(
       config.headers["x_authorization"] = token;
     }
     store.dispatch(actionLoading());
-    console.log("1111", config);
     return config;
   },
   (error) => {
@@ -41,12 +40,16 @@ instance.interceptors.response.use(
           refreshToken: TokenService.getRefreshToken(),
         });
 
-        const {
-          data: { data: accessToken },
-        } = rs;
+        const { accessToken } = rs.data.result;
         TokenService.updateAccessToken(accessToken);
         return instance(originalConfig);
       } catch (_error) {
+        const { error } = _error.response.data;
+        store.dispatch(
+          showDialog({
+            msgs: error,
+          })
+        );
         return Promise.reject(_error);
       }
     }

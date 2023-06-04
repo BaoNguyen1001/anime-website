@@ -3,6 +3,7 @@ const randToken = require("rand-token");
 const authMethod = require("../methods/auth.methods");
 const jwtVariable = require("../constants/jwtVariable");
 const UserModel = require("../models/user.model");
+const response = require("../constants/response");
 
 const AuthController = {};
 
@@ -26,7 +27,7 @@ AuthController.signup = async (req, res, next) => {
       },
     });
     if (checkUser) {
-      return res.status(401).json({ error: "Username is exist!" });
+      return response(res, 401, {}, "Username is exist!");
     }
 
     const data = {
@@ -35,10 +36,10 @@ AuthController.signup = async (req, res, next) => {
     };
     const user = await UserModel.create(data);
     if (!user) {
-      return res.status(500).json({ error: "Server error! Pls try again" });
+      return response(res, 500, {}, "Server error! Pls try again");
     }
 
-    return res.status(200).json({ message: "Register success! Login now" });
+    return response(res, 200, { message: "Register success! Login now" });
   } catch (error) {
     next(error);
   }
@@ -53,12 +54,12 @@ AuthController.login = async (req, res) => {
       },
     });
     if (!user) {
-      return res.status(401).json({ error: "Username not exist" });
+      return response(res, 401, {}, "Username not exist");
     }
 
     const matchPassword = await bcrypt.compare(password, user.password);
     if (!matchPassword) {
-      return res.status(401).json({ error: "Password is invalid" });
+      return response(res, 401, {}, "Password is invalid");
     }
 
     const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
@@ -72,7 +73,7 @@ AuthController.login = async (req, res) => {
       accessTokenLife
     );
     if (!accessToken) {
-      return res.status(500).json({ error: "Server error! Pls try again" });
+      return response(res, 500, {}, "Server error! Pls try again");
     }
     let refreshToken = randToken.generate(jwtVariable.refreshTokenSize);
     if (!user.refreshToken) {
@@ -88,14 +89,12 @@ AuthController.login = async (req, res) => {
       );
 
       if (!updateRefreshToken) {
-        return res.status(500).json({ error: "Server error! Pls try again" });
+        return response(res, 500, {}, "Server error! Pls try again");
       }
     } else {
       refreshToken = user.refreshToken;
     }
-
-    return res.status(200).json({
-      message: "Login success",
+    const result = {
       user: {
         userName: user.userName,
         age: user.age,
@@ -103,9 +102,10 @@ AuthController.login = async (req, res) => {
         refreshToken,
       },
       accessToken: accessToken,
-    });
+    };
+    return response(res, 200, result);
   } catch (err) {
-    return res.status(401).json({ error: err });
+    return response(res, 401, {}, err);
   }
 };
 
@@ -114,11 +114,11 @@ AuthController.refreshToken = async (req, res) => {
   const refreshTokenFromBody = req.body.refreshToken;
 
   if (!accessTokenFromHeader) {
-    return res.status(400).json({ error: "Not found the access token" });
+    return response(res, 400, {}, "Not found the access token");
   }
 
   if (!refreshTokenFromBody) {
-    return res.status(400).json({ error: "Not found the refresh token" });
+    return response(res, 400, {}, "Not found the refresh token");
   }
 
   const accessTokenSecret =
@@ -132,7 +132,7 @@ AuthController.refreshToken = async (req, res) => {
   );
 
   if (!decoded) {
-    return res.status(400).json({ error: "Access token is invalid" });
+    return response(res, 400, {}, "Access token is invalid");
   }
 
   const userName = decoded.payload.userName;
@@ -143,11 +143,11 @@ AuthController.refreshToken = async (req, res) => {
     },
   });
   if (!user) {
-    return res.status(401).json({ error: "Username not exist" });
+    return response(res, 401, {}, "Username not exist");
   }
 
   if (refreshTokenFromBody !== user.refreshToken) {
-    return res.status(400).json({ error: "Refresh token is invalid" });
+    return response(res, 401, {}, "Refresh token is invalid");
   }
 
   const dataForAccessToken = {
@@ -160,10 +160,10 @@ AuthController.refreshToken = async (req, res) => {
     accessTokenLife
   );
   if (!accessToken) {
-    return res.status(500).json({ error: "Server error. Pls try again" });
+    return response(res, 500, {}, "Server error! Pls try again");
   }
 
-  return res.status(200).json({ data: accessToken });
+  return response(res, 200, { accessToken: accessToken });
 };
 
 module.exports = AuthController;

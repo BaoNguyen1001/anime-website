@@ -3,33 +3,39 @@ import api from "./Api.service";
 import TokenService from "./Token.service";
 import { store, setAuthenticationState } from "../store";
 
-const register = async (userName, password, setMessage, setIsError) => {
-  return await api
+const register = async (userName, password) => {
+  const response = await api
     .post("/auth/signup", {
       userName,
       password,
     })
     .then((response) => {
-      const { message } = response.data;
-      if (message) {
-        setMessage(message);
-        setIsError(false);
-      }
+      const { message } = response.data.result;
+      return {
+        isRegister: true,
+        message: message,
+        error: "",
+      };
     })
     .catch((err) => {
-      setMessage(err.response.data.error);
-      setIsError(true);
+      return {
+        isRegister: false,
+        message: "",
+        error: err.response.data.error,
+      };
     });
+
+  return response;
 };
 
-const login = async (userName, password, setMessage, navigate) => {
-  return await api
+const login = async (userName, password) => {
+  const response = await api
     .post("/auth/login", {
       userName,
       password,
     })
     .then((response) => {
-      const { user, accessToken } = response.data;
+      const { user, accessToken } = response.data.result;
       if (user) {
         TokenService.setUser(user);
       }
@@ -37,11 +43,19 @@ const login = async (userName, password, setMessage, navigate) => {
         TokenService.setAccessToken(accessToken);
       }
       store.dispatch(setAuthenticationState(AuthenticationState.AUTHENTICATED));
-      navigate("/");
+      return {
+        isLogin: true,
+        error: "",
+      };
     })
     .catch((err) => {
-      setMessage(err.response.data.error);
+      return {
+        isLogin: false,
+        error: err.response.data.error,
+      };
     });
+
+  return response;
 };
 
 const init = () => {

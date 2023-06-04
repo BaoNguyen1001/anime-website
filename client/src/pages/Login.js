@@ -5,7 +5,7 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import { RingLoader } from "react-spinners";
 import { required } from "../hooks/validation";
-import CustomMessage from '../components/Message/CustomMessage';
+import CustomMessage from "../components/Message/CustomMessage";
 import AuthService from "../services/Auth.service";
 
 function Login() {
@@ -22,46 +22,49 @@ function Login() {
     setLoading(true);
     setMessage();
 
-    await AuthService.login(userName, password, setMessage, navigate);
+    const { isLogin, error } = await AuthService.login(userName, password);
+    if (isLogin) {
+      navigate("/");
+    } else {
+      setMessage(error);
+    }
     setLoading(false);
-
-  }
+  };
 
   return (
     <Wrapper>
-        <Form className="login-form" onSubmit={handleSubmit} ref={formRef}>
-          <h1>Sign in</h1>
-          <Input
-            type="text"
-            placeholder="Username"
-            value={userName}
-            onChange={(event) => setUsername(event.target.value)}
-            validations={[required]}
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            validations={[required]}
-            required
-          />
-          {message && (
-            <CustomMessage message={message} className={'error'}/>
+      <Form className="login-form" onSubmit={handleSubmit} ref={formRef}>
+        <h1>Sign in</h1>
+        <Input
+          type="text"
+          placeholder="Username"
+          value={userName}
+          onChange={(event) => setUsername(event.target.value)}
+          validations={[required]}
+          required
+        />
+        <Input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          validations={[required]}
+          required
+        />
+        {message && <CustomMessage message={message} className={"error"} />}
+        <button type="submit" disabled={loading}>
+          {loading ? (
+            <RingLoader color={"#000000"} loading={loading} size={15} />
+          ) : (
+            "Login"
           )}
-          <button type="submit" disabled={loading}>
-            {loading ? (
-              <RingLoader color={"#000000"} loading={loading} size={15} />
-            ): "Login"}
-          </button>
-          <SignUpWrap>
-            Don't have account? 
-            <NavButton to="/signup">Sign up</NavButton>
-          </SignUpWrap>
-        </Form>
+        </button>
+        <SignUpWrap>
+          Don't have account?
+          <NavButton to="/signup">Sign up</NavButton>
+        </SignUpWrap>
+      </Form>
     </Wrapper>
-    
   );
 }
 
@@ -159,7 +162,7 @@ const Wrapper = styled.div`
     opacity: 0.6;
   }
 
-`
+`;
 const SignUpWrap = styled.div`
   color: white;
   display: flex;
@@ -167,8 +170,8 @@ const SignUpWrap = styled.div`
   width: 100%;
   margin-top: 15px;
   font-size: 11px;
-`
+`;
 const NavButton = styled(Link)`
-  color: #3399FF;
+  color: #3399ff;
   margin-left: 3px;
-`
+`;

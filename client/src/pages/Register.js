@@ -20,55 +20,67 @@ function Register() {
     event.preventDefault();
     setLoading(true);
     setMessage();
-    
-    await AuthService.register(userName, password, setMessage, setIsError);
+    const { isRegister, message, error } = await AuthService.register(
+      userName,
+      password
+    );
+    if (isRegister) {
+      setIsError(false);
+      setMessage(message);
+    } else {
+      setIsError(true);
+      setMessage(error);
+    }
     setLoading(false);
-  }
+  };
 
   return (
     <Wrapper>
-        <Form className="login-form" onSubmit={handleSubmit}>
-          <h1>Sign up</h1>
-          <Input
-            type="text"
-            placeholder="Username"
-            value={userName}
-            onChange={(event) => setUsername(event.target.value)}
-            required
-            validations={[required]}
+      <Form className="login-form" onSubmit={handleSubmit}>
+        <h1>Sign up</h1>
+        <Input
+          type="text"
+          placeholder="Username"
+          value={userName}
+          onChange={(event) => setUsername(event.target.value)}
+          required
+          validations={[required]}
+        />
+        <Input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          required
+          validations={[required]}
+        />
+        <Input
+          type="password"
+          placeholder="Confirmed password"
+          value={confirmedPassword}
+          onChange={(event) => setConfirmedPassword(event.target.value)}
+          required
+          validations={[required]}
+        />
+        {message && (
+          <CustomMessage
+            message={message}
+            className={isError ? "error" : "info"}
           />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-            validations={[required]}
-          />
-          <Input
-            type="password"
-            placeholder="Confirmed password"
-            value={confirmedPassword}
-            onChange={(event) => setConfirmedPassword(event.target.value)}
-            required
-            validations={[required]} 
-          />
-          {message && (
-            <CustomMessage message={message} className={isError ? 'error' : 'info'}/>
+        )}
+        <button type="submit" disabled={loading}>
+          {loading ? (
+            <RingLoader color={"#000000"} loading={loading} size={15} />
+          ) : (
+            "Register"
           )}
-          <button type="submit" disabled={loading}>
-            {loading ? (
-              <RingLoader color={"#000000"} loading={loading} size={15} />
-            ): "Register"}
-          </button>
-          <LoginWrap>
-            Have an account?
-            <NavButton to="/login">Login</NavButton>
-          </LoginWrap>
-        </Form>
-
+        </button>
+        <LoginWrap>
+          Have an account?
+          <NavButton to="/login">Login</NavButton>
+        </LoginWrap>
+      </Form>
     </Wrapper>
-    
   );
 }
 
@@ -159,7 +171,7 @@ const Wrapper = styled.div`
     pointer-events: none;
     opacity: 0.6;
   }
-`
+`;
 const LoginWrap = styled.div`
   color: white;
   display: flex;
@@ -167,8 +179,8 @@ const LoginWrap = styled.div`
   width: 100%;
   margin-top: 15px;
   font-size: 11px;
-`
+`;
 const NavButton = styled(Link)`
-  color: #3399FF;
+  color: #3399ff;
   margin-left: 3px;
-`
+`;

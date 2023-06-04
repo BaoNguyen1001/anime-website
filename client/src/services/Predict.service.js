@@ -5,16 +5,13 @@ const getRecommendIdByUser = async () => {
   const response = await api
     .get("/recommend/top-rating")
     .then((res) => {
-      const {
-        data: { data: result },
-      } = res;
-      return result;
+      const { recommendations } = res.data.result;
+      return recommendations;
     })
     .catch((err) => {
       const { error } = err.response.data;
       store.dispatch(
         showDialog({
-          title: "Error message",
           msgs: error,
           onOK: () => window.history.back(),
         })
@@ -29,16 +26,13 @@ const getNewRecommend = async () => {
   const response = await api
     .get("/recommend")
     .then((res) => {
-      const {
-        data: { data: result },
-      } = res;
-      return result;
+      const { recommendations } = res.data.result;
+      return recommendations;
     })
     .catch((err) => {
       const { error } = err.response.data;
       store.dispatch(
         showDialog({
-          title: "Error message",
           msgs: error,
         })
       );
