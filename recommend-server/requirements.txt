@@ -1,10 +1,10 @@
 python-dotenv
-flask[async]
-Flask-Migrate==3.1.0
-Flask-SQLAlchemy==3.0.2
-psycopg2-binary==2.9.3
+flask
 pyspark
 findspark
 numpy
 pandas
+# Flask-Migrate==3.1.0
+# Flask-SQLAlchemy==3.0.2
+# psycopg2-binary==2.9.3
 # pip install -r requirements.txt

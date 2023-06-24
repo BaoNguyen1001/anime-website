@@ -1,6 +1,5 @@
 
 from flask import abort, jsonify, redirect, render_template, request, url_for
-from flask_migrate import Migrate
 import sys
 import findspark
 findspark.init()
@@ -8,7 +7,6 @@ findspark.find()
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import SparkSession
 from init import create_app
-from models import db, Ratings, Predicts
 from engine import RecommendationEngine
 from datetime import datetime
 
@@ -32,10 +30,6 @@ def init_spark_context():
 app = create_app()
 sc, spark = init_spark_context()
 recommendEngine = RecommendationEngine(sc, spark, app)
-
-def convert_to_predict_obj(obj):
-    return Predicts(userId = obj["userId"], recommendations = obj["recommendations"])
-
 
 @app.route("/api/recommend", methods=["POST"])
 def getRecommend():
