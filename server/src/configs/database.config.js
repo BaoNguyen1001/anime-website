@@ -1,5 +1,5 @@
-const {Sequelize} = require('sequelize');
-const DataTypes = require('sequelize');
+const { Sequelize } = require("sequelize");
+const DataTypes = require("sequelize");
 
 const dbConfig = {
   HOST: "localhost",
@@ -11,8 +11,8 @@ const dbConfig = {
     max: 5,
     min: 0,
     acquire: 30000,
-    idle: 10000
-  }
+    idle: 10000,
+  },
 };
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -23,11 +23,11 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     max: dbConfig.pool.max,
     min: dbConfig.pool.min,
     acquire: dbConfig.pool.acquire,
-    idle: dbConfig.pool.idle
-  }  
+    idle: dbConfig.pool.idle,
+  },
 });
 
-const db = {}
-db.sequelize = sequelize
+const db = {};
+db.sequelize = sequelize;
 
 module.exports = db;

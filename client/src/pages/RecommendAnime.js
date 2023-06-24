@@ -38,14 +38,14 @@ function RecommendAnime() {
     setLoading(true);
     window.scrollTo(0, 0);
     const animeRecommends = await PredictService.getRecommendIdByUser();
-    handleLoadData(animeRecommends);
+    await handleLoadData(animeRecommends);
     setLoading(false);
     document.title = "Recommend Anime - Miyou";
   };
 
   const getNewRecommendBtn = async () => {
     const newPredicts = await PredictService.getNewRecommend();
-    handleLoadData(newPredicts);
+    await handleLoadData(newPredicts);
   };
 
   const handleLoadData = async (animeRecommends) => {
@@ -161,10 +161,10 @@ function RecommendAnime() {
       {loading && <SearchResultsSkeleton name="Recommend Anime" />}
       {!loading && (
         <Parent>
+          <Heading>
+            <span>Recommend Anime</span> Results
+          </Heading>
           <div>
-            <Heading>
-              <span>Filter search</span>
-            </Heading>
             <FilterWrapper>
               <ItemWrapper>
                 <p className="label-name">Search</p>
@@ -203,9 +203,6 @@ function RecommendAnime() {
               </ItemWrapper>
             </FilterWrapper>
           </div>
-          <Heading>
-            <span>Recommend Anime</span> Results
-          </Heading>
           <CardWrapper>
             {animeDetails.filter(filterData).map((item, i) => (
               <Links to={"/id/" + item.idMal}>
@@ -307,7 +304,7 @@ const Heading = styled.p`
   font-size: 1.8rem;
   color: white;
   font-weight: 200;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   span {
     font-weight: 600;
   }
