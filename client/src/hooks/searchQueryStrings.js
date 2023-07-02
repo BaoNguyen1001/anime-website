@@ -188,7 +188,25 @@ export let searchByIdQuery = `
 						large
 					}
 				}
-		}
+			}
+			recommendations {
+        nodes {
+          mediaRecommendation {
+						id
+						idMal
+						title{
+							userPreferred
+						}
+						format
+						type
+						status(version:2)
+						bannerImage
+						coverImage{
+							large
+						}
+          }
+        }
+      }
 		}
 	}
 `;

@@ -201,7 +201,7 @@ function MalAnimeDetails() {
                     </NavBar>
                   </div>
 
-                  <hr style={{ color: "white" }} />
+                  <hr />
                   <div className="row">
                     <div className="col-2">
                       <MainInfo>
@@ -246,26 +246,64 @@ function MalAnimeDetails() {
                     </div>
                     <div className="col-10">
                       {subTask ? (
-                        <RelationsCards>
-                          <p>Relations</p>
-                          <CardWrapper>
-                            {anilistResponse.relations.nodes
-                              .filter(
-                                (item) => item.type === "ANIME" && item.idMal
-                              )
-                              .map((item) => (
-                                <Links
-                                  to={"/id/" + item.idMal}
-                                  className="relation-items"
-                                >
-                                  <img src={item.coverImage.large} alt="" />
-                                  <p style={{ marginBottom: 0 }}>
-                                    {item.title.userPreferred}
-                                  </p>
-                                </Links>
-                              ))}
-                          </CardWrapper>
-                        </RelationsCards>
+                        <div>
+                          <RelationsCards>
+                            <p>Relations</p>
+                            <CardWrapper>
+                              {anilistResponse.relations.nodes
+                                .filter(
+                                  (item) => item.type === "ANIME" && item.idMal
+                                )
+                                .map((item) => (
+                                  <Links
+                                    to={"/id/" + item.idMal}
+                                    className="relation-items"
+                                  >
+                                    <img src={item.coverImage.large} alt="" />
+                                    <p style={{ marginBottom: 0 }}>
+                                      {item.title.userPreferred}
+                                    </p>
+                                  </Links>
+                                ))}
+                            </CardWrapper>
+                          </RelationsCards>
+                          <hr />
+                          <RecommendsCards>
+                            <p>Recommendations</p>
+                            <CardWrapper>
+                              {anilistResponse.recommendations.nodes
+                                .filter((item) => {
+                                  const { mediaRecommendation } = item;
+                                  return (
+                                    mediaRecommendation.type === "ANIME" &&
+                                    mediaRecommendation.idMal
+                                  );
+                                })
+                                .map((item) => {
+                                  const { mediaRecommendation } = item;
+                                  return (
+                                    <Links
+                                      to={"/id/" + mediaRecommendation.idMal}
+                                      className="recommend-items"
+                                    >
+                                      <img
+                                        src={
+                                          mediaRecommendation.coverImage.large
+                                        }
+                                        alt=""
+                                      />
+                                      <p style={{ marginBottom: 0 }}>
+                                        {
+                                          mediaRecommendation.title
+                                            .userPreferred
+                                        }
+                                      </p>
+                                    </Links>
+                                  );
+                                })}
+                            </CardWrapper>
+                          </RecommendsCards>
+                        </div>
                       ) : (
                         <Episode>
                           <DubContainer>
@@ -502,6 +540,10 @@ const ContentWrapper = styled.div`
   padding: 0 3rem 0 3rem;
   display: flex;
 
+  hr {
+    color: white;
+  }
+
   div > * {
     margin-bottom: 0.6rem;
   }
@@ -665,6 +707,11 @@ const NavBar = styled.nav`
 const RelationsCards = styled.div`
   color: white;
 `;
+
+const RecommendsCards = styled.div`
+  color: white;
+`;
+
 const CardWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, 110px);
@@ -690,6 +737,15 @@ const CardWrapper = styled.div`
     grid-row-gap: 1.5rem;
   }
   .relation-items {
+    margin: 0;
+    font-size: 10px;
+    img {
+      width: 100px;
+      height: 140px;
+    }
+  }
+
+  .recommend-items {
     margin: 0;
     font-size: 10px;
     img {
