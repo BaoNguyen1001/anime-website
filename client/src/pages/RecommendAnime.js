@@ -13,22 +13,13 @@ import SearchResultsSkeleton from "../components/skeletons/SearchResultsSkeleton
 import { TopRecommendByIdQuery } from "../hooks/searchQueryStrings";
 import PredictService from "../services/Predict.service";
 import { DefaultButton } from "../components/Base/DefaultButton";
+import FilterMovie from "../components/Filter/FilterMovie";
 
 function RecommendAnime() {
   let page = useParams().page;
   const [animeDetails, setAnimeDetails] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState({
-    animeName: "",
-    genres: {
-      selected: "",
-      listGenres: [],
-    },
-    rating: {
-      minValue: 0,
-      maxValue: 5,
-    },
-  });
+  const [filterData, setFilterData] = useState(animeDetails);
 
   useEffect(() => {
     getInitialAnime();
@@ -80,13 +71,6 @@ function RecommendAnime() {
       .sort((a, b) => b.rating - a.rating);
 
     setAnimeDetails(animeList);
-    setFilter({
-      ...filter,
-      genres: {
-        ...filter.genres,
-        listGenres: res.data.data.genres,
-      },
-    });
   };
 
   const getAnimeId = (animeList) => {
@@ -98,62 +82,23 @@ function RecommendAnime() {
     return ids;
   };
 
-  const updateFilterParams = (name, value, filterName = null) => {
-    if (filterName) {
-      setFilter({
-        ...filter,
-        [filterName]: {
-          ...filter[filterName],
-          [name]: value,
-        },
-      });
-    } else {
-      setFilter({
-        ...filter,
-        [name]: value,
-      });
-    }
+  const onFilter = (newData) => {
+    setFilterData(newData);
+    return newData;
   };
 
-  const filterData = (item) => {
-    const {
-      animeName,
-      genres: { selected: genreSelected },
-      rating: { minValue, maxValue },
-    } = filter;
-    const titleLanguage = item.title.english ? "english" : "userPreferred";
-    const filterMethod = [
-      (item) =>
-        item.title[titleLanguage]
-          .toLowerCase()
-          .includes(animeName.toLowerCase()),
-      (item) => (genreSelected ? item.genres.includes(genreSelected) : true),
-      (item) => item.rating >= minValue && item.rating <= maxValue,
-    ];
-
-    const result = filterMethod.map((method) => {
-      if (method(item)) {
-        return true;
-      }
-      return false;
-    });
-
-    return !result.includes(false);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    updateFilterParams(name, value);
-  };
-
-  const handleDropDownChange = (e) => {
-    const { filterName, name, value } = e.target;
-    updateFilterParams(name, value, filterName);
-  };
-
-  const handleRangeChange = (e) => {
-    const { filterName, name, value } = e.target;
-    updateFilterParams(name, value, filterName);
+  const otherFilterField = () => {
+    return (
+      <>
+        <ItemWrapper>
+          <DefaultButton
+            label="Recommend"
+            name="recommendBtn"
+            onClick={getNewRecommendBtn}
+          />
+        </ItemWrapper>
+      </>
+    );
   };
 
   return (
@@ -165,46 +110,14 @@ function RecommendAnime() {
             <span>Recommend Anime</span> Results
           </Heading>
           <div>
-            <FilterWrapper>
-              <ItemWrapper>
-                <p className="label-name">Search</p>
-                <DefaultTextInput
-                  icon={<BiSearch />}
-                  value={filter?.animeName}
-                  onChange={handleInputChange}
-                  name="animeName"
-                />
-              </ItemWrapper>
-              <ItemWrapper>
-                <p className="label-name">Genres</p>
-                <DefaultDropDownList
-                  value={filter?.genres?.selected}
-                  list={filter?.genres?.listGenres}
-                  onChange={handleDropDownChange}
-                  filterName="genres"
-                />
-              </ItemWrapper>
-              <ItemWrapper>
-                <DefaultRangeInput
-                  filterName="rating"
-                  label="Rating"
-                  min={0}
-                  max={5}
-                  value={filter?.rating}
-                  onChange={handleRangeChange}
-                />
-              </ItemWrapper>
-              <ItemWrapper>
-                <DefaultButton
-                  label="Recommend"
-                  name="recommendBtn"
-                  onClick={getNewRecommendBtn}
-                />
-              </ItemWrapper>
-            </FilterWrapper>
+            <FilterMovie
+              data={animeDetails}
+              onFilter={onFilter}
+              otherFields={otherFilterField()}
+            />
           </div>
           <CardWrapper>
-            {animeDetails.filter(filterData).map((item, i) => (
+            {filterData.map((item, i) => (
               <Links to={"/id/" + item.idMal}>
                 <img src={item.coverImage.large} alt="" />
                 <p style={{ marginBottom: 0 }}>

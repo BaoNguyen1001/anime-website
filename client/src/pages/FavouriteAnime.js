@@ -5,11 +5,13 @@ import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import SearchResultsSkeleton from "../components/skeletons/SearchResultsSkeleton";
 import { favouritesAnimeQuery } from "../hooks/searchQueryStrings";
+import FilterMovie from "../components/Filter/FilterMovie";
 
 function FavouriteAnime() {
   let page = useParams().page;
   const [animeDetails, setAnimeDetails] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filterData, setFilterData] = useState(animeDetails);
 
   useEffect(() => {
     getAnime();
@@ -40,6 +42,12 @@ function FavouriteAnime() {
     setAnimeDetails(res.data.data.Page.media);
     document.title = "Favorite Anime - Miyou";
   }
+
+  const onFilter = (newData) => {
+    setFilterData(newData);
+    return newData;
+  };
+
   return (
     <div>
       {loading && <SearchResultsSkeleton name="Favourite Anime" />}
@@ -48,8 +56,9 @@ function FavouriteAnime() {
           <Heading>
             <span>Favourite Anime</span> Results
           </Heading>
+          <FilterMovie data={animeDetails} onFilter={onFilter} />
           <CardWrapper>
-            {animeDetails.map((item, i) => (
+            {filterData.map((item, i) => (
               <Links to={"/id/" + item.idMal}>
                 <img src={item.coverImage.large} alt="" />
                 <p>

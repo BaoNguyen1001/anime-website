@@ -6,6 +6,7 @@ const initialState = {
   authenticatedState: AuthenticationState.AUTHENTICATED,
   errorInfos: [],
   totalLoadingProcess: 0,
+  genresCollections: [],
 };
 
 const isErrorExisting = (currentErrors, newError) => {
@@ -52,6 +53,12 @@ export const AppSlice = createSlice({
         totalLoadingProcess: state.totalLoadingProcess - 1,
       };
     },
+    setGenresCollections: (state, action) => {
+      return {
+        ...state,
+        genresCollections: action.payload,
+      };
+    },
   },
 });
 
@@ -61,6 +68,7 @@ export const {
   setAuthenticationState,
   actionLoading,
   actionLoaded,
+  setGenresCollections,
 } = AppSlice.actions;
 
 export default AppSlice.reducer;

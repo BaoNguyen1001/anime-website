@@ -54,7 +54,7 @@ export let TrendingAnimeQuery = `
 				}
 				description
 				episodes
-				
+				genres
 			}
 		}
 	}
@@ -269,7 +269,7 @@ export let TopRecommendByIdQuery = `
 `;
 
 export let GenresCollectionQuery = `
-	query() {
+	{
 		genres: GenreCollection
 	}
 `;
