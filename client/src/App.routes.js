@@ -18,6 +18,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import RecommendAnime from "./pages/RecommendAnime";
 import { DefaultLoading } from "./components/Base";
+import Profile from "./pages/Profile/Profile";
 
 function AppRoutes() {
   return (
@@ -40,6 +41,7 @@ function AppRoutes() {
           <Route path="/watch/:episode" element={<WatchAnime />} />
           <Route path="/id/:id" element={<MalAnimeDetails />} />
           <Route path="/play/:slug/:episode" element={<WatchAnimeV2 />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         <Toaster
           toastOptions={{

@@ -1,6 +1,7 @@
 const RatingModel = require("../models/rating.model");
 const response = require("../constants/response");
 const RatingController = {};
+const { Op } = require("sequelize");
 
 RatingController.getRating = async (req, res) => {
   const user = req.user;
@@ -48,6 +49,25 @@ RatingController.updateRating = async (req, res) => {
   }
 
   return response(res, 200, { rating: newRating });
+};
+
+RatingController.getListRating = async (req, res) => {
+  const { id } = req.user;
+  try {
+    const ratingList = await RatingModel.findAll({
+      attributes: ["movieId", "rating"],
+      where: {
+        userId: id,
+        rating: {
+          [Op.gt]: 0, // Greater than 0 condition
+        },
+      },
+    });
+
+    return response(res, 200, { ratingList: ratingList });
+  } catch (err) {
+    return response(res, 500, {}, "Server error! Pls try again");
+  }
 };
 
 module.exports = RatingController;

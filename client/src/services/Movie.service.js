@@ -45,9 +45,30 @@ const updateRating = async (id, rating) => {
   return response;
 };
 
+const getListRating = async () => {
+  const response = await api
+    .get("/movie/list")
+    .then((res) => {
+      const { ratingList } = res.data.result;
+      return ratingList;
+    })
+    .catch((err) => {
+      const { error } = err.response.data;
+      store.dispatch(
+        showDialog({
+          msgs: error,
+        })
+      );
+
+      throw err;
+    });
+  return response;
+};
+
 const MovieService = {
   getRating,
   updateRating,
+  getListRating,
 };
 
 export default MovieService;

@@ -1,11 +1,11 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import {Button} from 'react-bootstrap';
+import { Button } from "react-bootstrap";
 import "./starRating.css";
 
 const StarRating = (props) => {
-  const { rating, unRating } = props;
+  const { rating, unRating, size } = props;
   //const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [previousRating, setPreviousRating] = useState(0);
@@ -17,7 +17,7 @@ const StarRating = (props) => {
   }, [rating]);
 
   const updateRating = async (value) => {
-    if(value !== previousRating) {
+    if (value !== previousRating) {
       props.updateRating(value);
     }
   };
@@ -34,6 +34,7 @@ const StarRating = (props) => {
             onClick={() => updateRating(index)}
             onMouseEnter={() => setHover(index)}
             onMouseLeave={() => setHover(rating)}
+            style={{ fontSize: size || "36px" }}
           >
             <p className="star">&#9733;</p>
           </CustomButton>
@@ -44,20 +45,16 @@ const StarRating = (props) => {
           <span>Unrating</span>
         </Button>
       )}
- 
     </div>
   );
 };
-
 
 const CustomButton = styled.button`
   background-color: transparent;
   border: none;
   outline: none;
   cursor: pointer;
-  font-size: 36px;
   margin: 0;
-`
+`;
 
 export default StarRating;
-

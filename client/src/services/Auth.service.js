@@ -1,7 +1,7 @@
 import AuthenticationState from "../emuns/auth-state.enum";
 import api from "./Api.service";
 import TokenService from "./Token.service";
-import { store, setAuthenticationState } from "../store";
+import { store, setAuthenticationState, showDialog } from "../store";
 
 const register = async (userName, password) => {
   const response = await api
@@ -58,6 +58,27 @@ const login = async (userName, password) => {
   return response;
 };
 
+const profile = async () => {
+  const response = await api
+    .get("/auth/profile")
+    .then((res) => {
+      const { userProfile } = res.data.result;
+      return userProfile;
+    })
+    .catch((err) => {
+      const { error } = err.response.data;
+      store.dispatch(
+        showDialog({
+          msgs: error,
+          onOK: () => (window.location.href = "/"),
+        })
+      );
+
+      throw err;
+    });
+  return response;
+};
+
 const init = () => {
   store.dispatch(setAuthenticationState(AuthenticationState.AUTHENTICATING));
   const isAuthenticated = TokenService.isNotExpiredAccessToken();
@@ -83,6 +104,7 @@ const AuthService = {
   register,
   login,
   logout,
+  profile,
   getCurrentUser,
 };
 

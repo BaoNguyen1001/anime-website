@@ -51,7 +51,7 @@ function User() {
           {currentUser ? (
             <>
               <div className="custom-dropdown-item your-name">{`@${currentUser.userName}`}</div>
-              <Links to="#" className="custom-dropdown-item">
+              <Links to="/profile" className="custom-dropdown-item">
                 Profile
               </Links>
               <Links to="#" className="custom-dropdown-item">
