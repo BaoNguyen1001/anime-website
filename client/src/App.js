@@ -72,7 +72,7 @@ function App(props) {
 
   return (
     <>
-      <div className="App">
+      <div className="App" style={{ height: "100vh" }}>
         <AppRoutes />
       </div>
       {renderErrorInfoDialog()}

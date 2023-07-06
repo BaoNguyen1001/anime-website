@@ -7,16 +7,6 @@ const response = require("../constants/response");
 
 const AuthController = {};
 
-AuthController.profile = async (req, res) => {
-  try {
-    const users = await UserModel.findAll();
-    return res.status(200).json(users);
-  } catch (error) {
-    console.log(error);
-  }
-  return res.status(400).json({ error: "error" });
-};
-
 AuthController.signup = async (req, res, next) => {
   try {
     const { userName, password } = req.body;
@@ -49,6 +39,7 @@ AuthController.login = async (req, res) => {
   try {
     const { userName, password } = req.body;
     const user = await UserModel.findOne({
+      attributes: ["userName", "refreshToken"],
       where: {
         userName,
       },
@@ -97,8 +88,6 @@ AuthController.login = async (req, res) => {
     const result = {
       user: {
         userName: user.userName,
-        age: user.age,
-        gender: user.gender,
         refreshToken,
       },
       accessToken: accessToken,
@@ -164,6 +153,30 @@ AuthController.refreshToken = async (req, res) => {
   }
 
   return response(res, 200, { accessToken: accessToken });
+};
+
+AuthController.profile = async (req, res) => {
+  const { id } = req.user;
+  try {
+    const userProfile = await UserModel.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (userProfile) {
+      const formatUserProfile = {
+        userName: userProfile.userName,
+        age: userProfile.age,
+        gender: userProfile.gender,
+      };
+      return response(res, 200, { userProfile: formatUserProfile });
+    }
+
+    return response(res, 200, {}, "User not found");
+  } catch (err) {
+    return response(res, 500, {}, "Server error! Pls try again");
+  }
 };
 
 module.exports = AuthController;

@@ -1,16 +1,9 @@
-import axios from "axios";
 import api from "../services/Api.service";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
-import {
-  DefaultDropDownList,
-  DefaultTextInput,
-  DefaultRangeInput,
-} from "../components/Base";
-import { BiSearch } from "react-icons/bi";
 import SearchResultsSkeleton from "../components/skeletons/SearchResultsSkeleton";
-import { TopRecommendByIdQuery } from "../hooks/searchQueryStrings";
+import { ListAnimeById } from "../hooks/searchQueryStrings";
 import PredictService from "../services/Predict.service";
 import { DefaultButton } from "../components/Base/DefaultButton";
 import FilterMovie from "../components/Filter/FilterMovie";
@@ -50,7 +43,7 @@ function RecommendAnime() {
         Accept: "application/json",
       },
       data: {
-        query: TopRecommendByIdQuery,
+        query: ListAnimeById,
         variables: {
           ids: animeIds,
           perPage: 50,

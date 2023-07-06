@@ -263,7 +263,7 @@ export let searchWatchedId = `
 // 	}
 // `;
 
-export let TopRecommendByIdQuery = `
+export let ListAnimeById = `
 	query($ids: [Int], $perPage: Int, $page: Int) {
 		Page(page: $page, perPage: $perPage) {
 			media(idMal_in: $ids, type: ANIME) {
@@ -274,6 +274,7 @@ export let TopRecommendByIdQuery = `
 					native
 					userPreferred
 				}
+				type
 				genres
 				bannerImage
 				coverImage {

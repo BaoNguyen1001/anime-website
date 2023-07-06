@@ -8,6 +8,7 @@ import {
 import { BiSearch } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { AppSelector } from "../../store";
+import "./filter.scss";
 
 const FilterMovie = (props) => {
   const { data, onFilter: parentCallBack, otherFields } = props;
@@ -108,6 +109,7 @@ const FilterMovie = (props) => {
           value={filter?.animeName}
           onChange={handleInputChange}
           name="animeName"
+          className="filter-text-input"
         />
       </ItemWrapper>
       <ItemWrapper>
