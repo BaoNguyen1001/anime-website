@@ -8,6 +8,6 @@ const isRating = AuthMiddleware.isRating;
 
 router.get("/rating/:movieId", isRating, isAuth, RatingController.getRating);
 router.post("/rating/:movieId", isAuth, RatingController.updateRating);
-router.get("/list", RatingController.getListRating);
+router.post("/list", RatingController.getListRating);
 
 module.exports = router;

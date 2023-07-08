@@ -94,6 +94,8 @@ function RecommendAnime() {
     );
   };
 
+  const listFilterItem = ["Search", "Genres", "Year", "Season", "Rating"];
+
   return (
     <div>
       {loading && <SearchResultsSkeleton name="Recommend Anime" />}
@@ -107,6 +109,7 @@ function RecommendAnime() {
               data={animeDetails}
               onFilter={onFilter}
               otherFields={otherFilterField()}
+              listFilterItem={listFilterItem}
             />
           </div>
           <CardWrapper>

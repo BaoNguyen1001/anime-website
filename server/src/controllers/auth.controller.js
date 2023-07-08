@@ -39,7 +39,7 @@ AuthController.login = async (req, res) => {
   try {
     const { userName, password } = req.body;
     const user = await UserModel.findOne({
-      attributes: ["userName", "refreshToken"],
+      attributes: ["userName", "refreshToken", "password"],
       where: {
         userName,
       },
@@ -166,7 +166,9 @@ AuthController.profile = async (req, res) => {
 
     if (userProfile) {
       const formatUserProfile = {
+        id: userProfile.id,
         userName: userProfile.userName,
+        fullName: userProfile.fullName,
         age: userProfile.age,
         gender: userProfile.gender,
       };
@@ -174,6 +176,28 @@ AuthController.profile = async (req, res) => {
     }
 
     return response(res, 200, {}, "User not found");
+  } catch (err) {
+    return response(res, 500, {}, "Server error! Pls try again");
+  }
+};
+
+AuthController.updateProfile = async (req, res) => {
+  const { id } = req.user;
+  const { profile } = req.body;
+  try {
+    const user = await UserModel.findByPk(id);
+
+    if (!user) {
+      return response(res, 200, {}, "User not found");
+    }
+
+    user.fullName = profile.fullName;
+    user.age = profile.age;
+    user.gender = profile.gender;
+
+    await user.save();
+
+    return response(res, 200, { message: "Update profile success!" });
   } catch (err) {
     return response(res, 500, {}, "Server error! Pls try again");
   }

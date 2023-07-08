@@ -1,14 +1,12 @@
-const Sequelize = require('sequelize');
-const db = require('../configs/database.config');
+const Sequelize = require("sequelize");
+const db = require("../configs/database.config");
 
-
-const UserModel = db.sequelize.define( "user", {
+const UserModel = db.sequelize.define("user", {
   id: {
     type: Sequelize.INTEGER,
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
-    
   },
   userName: {
     type: Sequelize.STRING,
@@ -17,7 +15,11 @@ const UserModel = db.sequelize.define( "user", {
   },
   password: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+  },
+  fullName: {
+    type: Sequelize.STRING,
+    allowNull: true,
   },
   age: {
     type: Sequelize.INTEGER,
@@ -31,6 +33,6 @@ const UserModel = db.sequelize.define( "user", {
     type: Sequelize.STRING,
     allowNull: true,
   },
-})
+});
 
 module.exports = UserModel;

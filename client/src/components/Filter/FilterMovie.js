@@ -11,9 +11,12 @@ import { AppSelector } from "../../store";
 import "./filter.scss";
 
 const FilterMovie = (props) => {
-  const { data, onFilter: parentCallBack, otherFields } = props;
+  const { data, onFilter: parentCallBack, otherFields, listFilterItem } = props;
   const genresCollections = useSelector((state) =>
     AppSelector.getGenresCollections(state)
+  );
+  const seasonCollections = useSelector((state) =>
+    AppSelector.getSeasonCollections(state)
   );
 
   const [filter, setFilter] = useState({
@@ -25,6 +28,14 @@ const FilterMovie = (props) => {
     rating: {
       minValue: 0,
       maxValue: 5,
+    },
+    years: {
+      selected: "",
+      listYears: seasonCollections.years || [],
+    },
+    seasons: {
+      selected: "",
+      listSeasons: seasonCollections.seasons || [],
     },
   });
 
@@ -55,12 +66,15 @@ const FilterMovie = (props) => {
       animeName,
       genres: { selected: genreSelected },
       rating: { minValue, maxValue },
+      years: { selected: yearSelected },
+      seasons: { selected: seasonSelected },
     } = filter;
     const titleLanguage = item.title?.english
       ? "english"
       : item.title?.userPreferred
       ? "userPreferred"
       : undefined;
+
     const filterMethod = [
       (item) =>
         titleLanguage
@@ -73,6 +87,10 @@ const FilterMovie = (props) => {
         item?.rating
           ? item.rating >= minValue && item.rating <= maxValue
           : true,
+      (item) =>
+        yearSelected ? item.seasonYear.toString() === yearSelected : true,
+      (item) =>
+        seasonSelected ? item.season.toString() === seasonSelected : true,
     ];
 
     const result = filterMethod.map((method) => {
@@ -100,37 +118,86 @@ const FilterMovie = (props) => {
     updateFilterParams(name, value, filterName);
   };
 
+  const renderItem = (item) => {
+    let cell;
+    switch (item) {
+      case "Search":
+        cell = (
+          <ItemWrapper>
+            <p className="label-name">Search</p>
+            <DefaultTextInput
+              icon={<BiSearch />}
+              value={filter?.animeName}
+              onChange={handleInputChange}
+              name="animeName"
+              className="filter-text-input"
+            />
+          </ItemWrapper>
+        );
+        break;
+      case "Genres":
+        cell = (
+          <ItemWrapper>
+            <p className="label-name">Genres</p>
+            <DefaultDropDownList
+              value={filter?.genres?.selected}
+              list={filter?.genres?.listGenres}
+              onChange={handleDropDownChange}
+              filterName="genres"
+            />
+          </ItemWrapper>
+        );
+        break;
+      case "Rating":
+        cell = (
+          <ItemWrapper>
+            <DefaultRangeInput
+              filterName="rating"
+              label="Rating"
+              min={0}
+              max={5}
+              value={filter?.rating}
+              onChange={handleRangeChange}
+            />
+          </ItemWrapper>
+        );
+        break;
+      case "Year":
+        cell = (
+          <ItemWrapper>
+            <p className="label-name">Year</p>
+            <DefaultDropDownList
+              value={filter?.years?.selected}
+              list={filter?.years?.listYears}
+              onChange={handleDropDownChange}
+              filterName="years"
+            />
+          </ItemWrapper>
+        );
+        break;
+
+      case "Season":
+        cell = (
+          <ItemWrapper>
+            <p className="label-name">Season</p>
+            <DefaultDropDownList
+              value={filter?.seasons?.selected}
+              list={filter?.seasons?.listSeasons}
+              onChange={handleDropDownChange}
+              filterName="seasons"
+            />
+          </ItemWrapper>
+        );
+        break;
+      default:
+        break;
+    }
+    return cell;
+  };
+
   return (
     <FilterWrapper>
-      <ItemWrapper>
-        <p className="label-name">Search</p>
-        <DefaultTextInput
-          icon={<BiSearch />}
-          value={filter?.animeName}
-          onChange={handleInputChange}
-          name="animeName"
-          className="filter-text-input"
-        />
-      </ItemWrapper>
-      <ItemWrapper>
-        <p className="label-name">Genres</p>
-        <DefaultDropDownList
-          value={filter?.genres?.selected}
-          list={filter?.genres?.listGenres}
-          onChange={handleDropDownChange}
-          filterName="genres"
-        />
-      </ItemWrapper>
-      <ItemWrapper>
-        <DefaultRangeInput
-          filterName="rating"
-          label="Rating"
-          min={0}
-          max={5}
-          value={filter?.rating}
-          onChange={handleRangeChange}
-        />
-      </ItemWrapper>
+      {listFilterItem.map((item) => renderItem(item))}
       {otherFields}
     </FilterWrapper>
   );
@@ -139,7 +206,7 @@ const FilterMovie = (props) => {
 const FilterWrapper = styled.div`
   display: grid;
   grid-gap: 24px;
-  grid-template-columns: 200px 200px 424px 200px;
+  grid-template-columns: 200px 200px 200px 200px 424px 200px;
   align-items: end;
   margin-bottom: 50px;
 `;

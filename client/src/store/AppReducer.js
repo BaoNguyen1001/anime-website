@@ -7,6 +7,7 @@ const initialState = {
   errorInfos: [],
   totalLoadingProcess: 0,
   genresCollections: [],
+  seasonCollections: {},
 };
 
 const isErrorExisting = (currentErrors, newError) => {
@@ -59,6 +60,12 @@ export const AppSlice = createSlice({
         genresCollections: action.payload,
       };
     },
+    setSeasonCollections: (state, action) => {
+      return {
+        ...state,
+        seasonCollections: action.payload,
+      };
+    },
   },
 });
 
@@ -69,6 +76,7 @@ export const {
   actionLoading,
   actionLoaded,
   setGenresCollections,
+  setSeasonCollections,
 } = AppSlice.actions;
 
 export default AppSlice.reducer;

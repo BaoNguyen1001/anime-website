@@ -48,6 +48,8 @@ function FavouriteAnime() {
     return newData;
   };
 
+  const listFilterItem = ["Search", "Genres", "Year", "Season"];
+
   return (
     <div>
       {loading && <SearchResultsSkeleton name="Favourite Anime" />}
@@ -56,7 +58,11 @@ function FavouriteAnime() {
           <Heading>
             <span>Favourite Anime</span> Results
           </Heading>
-          <FilterMovie data={animeDetails} onFilter={onFilter} />
+          <FilterMovie
+            data={animeDetails}
+            onFilter={onFilter}
+            listFilterItem={listFilterItem}
+          />
           <CardWrapper>
             {filterData.map((item, i) => (
               <Links to={"/id/" + item.idMal}>

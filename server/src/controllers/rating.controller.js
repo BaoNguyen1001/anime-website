@@ -52,7 +52,7 @@ RatingController.updateRating = async (req, res) => {
 };
 
 RatingController.getListRating = async (req, res) => {
-  const { id } = req.user;
+  const { id } = req.body;
   try {
     const ratingList = await RatingModel.findAll({
       attributes: ["movieId", "rating"],

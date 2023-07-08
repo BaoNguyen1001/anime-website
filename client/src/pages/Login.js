@@ -4,7 +4,6 @@ import styled from "styled-components";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import { RingLoader } from "react-spinners";
-import { required } from "../hooks/validation";
 import CustomMessage from "../components/Message/CustomMessage";
 import AuthService from "../services/Auth.service";
 
@@ -40,7 +39,6 @@ function Login() {
           placeholder="Username"
           value={userName}
           onChange={(event) => setUsername(event.target.value)}
-          validations={[required]}
           required
         />
         <Input
@@ -48,7 +46,6 @@ function Login() {
           placeholder="Password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          validations={[required]}
           required
         />
         {message && <CustomMessage message={message} className={"error"} />}

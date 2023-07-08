@@ -47,6 +47,8 @@ function TrendingAnime() {
     return newData;
   };
 
+  const listFilterItem = ["Search", "Genres", "Year", "Season"];
+
   return (
     <div>
       {loading && <SearchResultsSkeleton name="Trending Anime" />}
@@ -55,7 +57,11 @@ function TrendingAnime() {
           <Heading>
             <span>Trending Anime</span> Results
           </Heading>
-          <FilterMovie data={animeDetails} onFilter={onFilter} />
+          <FilterMovie
+            data={animeDetails}
+            onFilter={onFilter}
+            listFilterItem={listFilterItem}
+          />
           <CardWrapper>
             {filterData.map((item, i) => (
               <Links to={"/id/" + item.idMal}>

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 
 export function DefaultTextInput(props) {
-  const { type, icon, value, name, onChange, className, color } = props;
+  const { type, icon, value, name, onChange, className } = props;
 
   const handleOnChange = (e) => {
     onChange(e);

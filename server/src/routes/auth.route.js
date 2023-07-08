@@ -9,4 +9,5 @@ router.post("/signup", authController.signup);
 router.post("/login", authController.login);
 router.post("/refresh", authController.refreshToken);
 router.get("/profile", isAuth, authController.profile);
+router.post("/profile", isAuth, authController.updateProfile);
 module.exports = router;

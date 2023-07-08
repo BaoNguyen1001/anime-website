@@ -23,7 +23,8 @@ export let PopularAnimeQuery = `
 				}
 				description
 				episodes
-				
+				season
+				seasonYear
 			}
 		}
 	}
@@ -55,6 +56,8 @@ export let TrendingAnimeQuery = `
 				description
 				episodes
 				genres
+				season
+				seasonYear
 			}
 		}
 	}
@@ -85,7 +88,8 @@ export let top100AnimeQuery = `
 				}
 				description
 				episodes
-				
+				season
+				seasonYear
 			}
 		}
 	}
@@ -116,6 +120,8 @@ export let favouritesAnimeQuery = `
 				}
 				description
 				episodes
+				season
+				seasonYear
 			}
 		}
 	}
@@ -138,6 +144,8 @@ export let searchAnimeQuery = `
 					extraLarge
 					large
 				}
+				season
+				seasonYear
 			}
 		}
 	}
@@ -156,6 +164,8 @@ export let searchByIdQuery = `
 			type
 			status
 			genres
+			season
+			seasonYear
 			description
 			startDate {
 				year
@@ -225,43 +235,12 @@ export let searchWatchedId = `
 					extraLarge
 				}
 				idMal
+				season
+				seasonYear
 			}
 		}
 	}
 `;
-
-// export let searchByAniIdQuery = `
-// 	query($id: Int) {
-// 		Media(id: $id){
-// 			title {
-// 				romaji
-// 				english
-// 				native
-// 				userPreferred
-// 			}
-// 			type
-// 			status
-// 			genres
-// 			description
-// 			startDate {
-// 				year
-// 				month
-// 				day
-// 			}
-// 			endDate {
-// 				year
-// 				month
-// 				day
-// 			}
-// 			averageScore
-// 			bannerImage
-// 			coverImage {
-// 				extraLarge
-// 				large
-// 			}
-// 		}
-// 	}
-// `;
 
 export let ListAnimeById = `
 	query($ids: [Int], $perPage: Int, $page: Int) {
@@ -281,6 +260,8 @@ export let ListAnimeById = `
 					medium
 					large
 				}
+				season
+				seasonYear
 			}
 		}
 		genres: GenreCollection

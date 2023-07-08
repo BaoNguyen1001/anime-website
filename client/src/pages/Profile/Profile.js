@@ -33,23 +33,24 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    getUserProfile();
+    getInitialData();
   }, []);
 
   useEffect(() => {
-    getRatingList();
+    if (user) {
+      getRatingList(user.id);
+    }
   }, [ratingPage]);
 
-  const getUserProfile = async () => {
+  const getInitialData = async () => {
     const userProfile = await AuthService.profile();
+    await getRatingList(userProfile.id);
     setUser(userProfile);
   };
 
-  const getRatingList = async () => {
-    if (user) {
-      const animeList = await MovieService.getListRating();
-      await handleLoadData(animeList);
-    }
+  const getRatingList = async (id) => {
+    const animeList = await MovieService.getListRating(id);
+    await handleLoadData(animeList);
   };
 
   const handleLoadData = async (animeList) => {
@@ -85,6 +86,11 @@ const Profile = () => {
     setRatingList(ratingList);
   };
 
+  const handleUpdateProfile = async () => {
+    const updateProfile = await AuthService.updateProfile(user);
+    return updateProfile;
+  };
+
   const getAnimeId = (animeList) => {
     const ids = [
       ...animeList.map((item) => {
@@ -98,11 +104,26 @@ const Profile = () => {
     setRatingPage(page);
   };
 
+  const onChangeProfile = (event) => {
+    const { name, value, type } = event.target;
+    let newValue = value;
+    if (type === "radio") {
+      newValue = parseInt(newValue);
+    }
+    setUser({ ...user, [name]: newValue });
+  };
+
   const renderTab = () => {
     let cell = <div></div>;
     switch (tabActive) {
       case "Overview":
-        cell = <Overview user={user} />;
+        cell = (
+          <Overview
+            user={user}
+            onUpdateProfile={handleUpdateProfile}
+            onChangeProfile={onChangeProfile}
+          />
+        );
         break;
 
       case "Rating":

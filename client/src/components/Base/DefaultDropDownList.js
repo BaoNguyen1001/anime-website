@@ -102,4 +102,9 @@ const DropDownWrapper = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+
+  #dropdown-menu-custom-components {
+    max-height: 300px;
+    overflow-y: scroll;
+  }
 `;

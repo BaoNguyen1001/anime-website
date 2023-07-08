@@ -45,9 +45,11 @@ const updateRating = async (id, rating) => {
   return response;
 };
 
-const getListRating = async () => {
+const getListRating = async (id) => {
   const response = await api
-    .get("/movie/list")
+    .post("/movie/list", {
+      id,
+    })
     .then((res) => {
       const { ratingList } = res.data.result;
       return ratingList;

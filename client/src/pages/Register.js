@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import { RingLoader } from "react-spinners";
-import { required } from "../hooks/validation";
+import { comparePassword } from "../hooks/validation";
 import CustomMessage from "../components/Message/CustomMessage";
 import AuthService from "../services/Auth.service";
 
@@ -20,6 +20,15 @@ function Register() {
     event.preventDefault();
     setLoading(true);
     setMessage();
+
+    const isValidConfirmPassword = onComparePassword();
+    if (!isValidConfirmPassword) {
+      setMessage("Confirm password must same as password");
+      setIsError(true);
+      setLoading(false);
+      return;
+    }
+
     const { isRegister, message, error } = await AuthService.register(
       userName,
       password
@@ -34,6 +43,11 @@ function Register() {
     setLoading(false);
   };
 
+  const onComparePassword = () => {
+    const isValid = comparePassword(password, confirmedPassword);
+    return isValid;
+  };
+
   return (
     <Wrapper>
       <Form className="login-form" onSubmit={handleSubmit}>
@@ -44,7 +58,6 @@ function Register() {
           value={userName}
           onChange={(event) => setUsername(event.target.value)}
           required
-          validations={[required]}
         />
         <Input
           type="password"
@@ -52,7 +65,6 @@ function Register() {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           required
-          validations={[required]}
         />
         <Input
           type="password"
@@ -60,7 +72,6 @@ function Register() {
           value={confirmedPassword}
           onChange={(event) => setConfirmedPassword(event.target.value)}
           required
-          validations={[required]}
         />
         {message && (
           <CustomMessage

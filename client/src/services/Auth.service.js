@@ -79,6 +79,29 @@ const profile = async () => {
   return response;
 };
 
+const updateProfile = async (profile) => {
+  const response = await api
+    .post("/auth/profile", {
+      profile,
+    })
+    .then((res) => {
+      const { message } = res.data.result;
+      return message;
+    })
+    .catch((err) => {
+      const { error } = err.response.data;
+      store.dispatch(
+        showDialog({
+          msgs: error,
+          onOK: () => (window.location.href = "/"),
+        })
+      );
+
+      throw err;
+    });
+  return response;
+};
+
 const init = () => {
   store.dispatch(setAuthenticationState(AuthenticationState.AUTHENTICATING));
   const isAuthenticated = TokenService.isNotExpiredAccessToken();
@@ -105,6 +128,7 @@ const AuthService = {
   login,
   logout,
   profile,
+  updateProfile,
   getCurrentUser,
 };
 
