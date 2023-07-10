@@ -16,7 +16,7 @@ Follow the steps below to start the project:
 ### 1. Clone the Repository
 
 Clone this repository to your local machine using the following command:
-git clone <repository_url>
+git clone [<repository_url>](https://github.com/BaoNguyen1001/anime-website.git)
 
 ### 2. Set Up the Client
 
