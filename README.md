@@ -43,10 +43,10 @@ The server will be accessible at `http://localhost:5000`.
 1. Navigate to the `recommend-server` folder:
    cd recommend-server
 2. Create a virtual environment and activate it:
-   python -m venv env
-  source env/bin/activate
-3. Install the required Python packages:
+   python -m venv env &
+   source env/bin/activate
+4. Install the required Python packages:
    pip install -r requirements.txt
-4. Start the Flask Python server:
+5. Start the Flask Python server:
    python -m flask run
 The recommendation server will be accessible at `http://localhost:4000`
