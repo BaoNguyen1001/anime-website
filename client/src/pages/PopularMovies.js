@@ -4,12 +4,10 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import SearchResultsSkeleton from "../components/skeletons/SearchResultsSkeleton";
-import FilterMovie from "../components/Filter/FilterMovie";
 
 function PopularMovies() {
   const [animeDetails, setAnimeDetails] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterData, setFilterData] = useState(animeDetails);
 
   useEffect(() => {
     getAnime();
@@ -27,13 +25,6 @@ function PopularMovies() {
     document.title = "Popular Anime - Miyou";
   }
 
-  const onFilter = (newData) => {
-    setFilterData(newData);
-    return newData;
-  };
-
-  const listFilterItem = ["Search", "Genres", "Year", "Season"];
-
   return (
     <div>
       {loading && <SearchResultsSkeleton name="Popular Movie" />}
@@ -42,13 +33,8 @@ function PopularMovies() {
           <Heading>
             <span>Popular Movie</span> Results
           </Heading>
-          <FilterMovie
-            data={animeDetails}
-            onFilter={onFilter}
-            listFilterItem={listFilterItem}
-          />
           <CardWrapper>
-            {filterData.map((item, i) => (
+            {animeDetails.map((item, i) => (
               <Links to={"/id/" + item.node.id}>
                 <img src={item.node.main_picture.large} alt="" />
                 <p>{item.node.title}</p>

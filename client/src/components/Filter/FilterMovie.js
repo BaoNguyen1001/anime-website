@@ -69,6 +69,7 @@ const FilterMovie = (props) => {
       years: { selected: yearSelected },
       seasons: { selected: seasonSelected },
     } = filter;
+
     const titleLanguage = item.title?.english
       ? "english"
       : item.title?.userPreferred
@@ -81,7 +82,7 @@ const FilterMovie = (props) => {
           ? item.title[titleLanguage]
               .toLowerCase()
               .includes(animeName.toLowerCase())
-          : item.title.toLowerCase().includes(animeName.toLowerCase()),
+          : item?.title.toLowerCase().includes(animeName.toLowerCase()),
       (item) => (genreSelected ? item.genres.includes(genreSelected) : true),
       (item) =>
         item?.rating
