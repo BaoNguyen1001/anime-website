@@ -80,8 +80,8 @@ RecommendController.getTopRatingByUserId = async (req, res) => {
 const roundingRating = (recommendations) => {
   const recommends = recommendations.map((item) => {
     const newItem = { ...item };
-    if (newItem.rating >= 5) {
-      newItem.rating = parseFloat("5.0");
+    if (newItem.rating >= 10) {
+      newItem.rating = parseFloat("10");
     } else {
       newItem.rating = parseFloat(newItem.rating.toFixed(2));
     }

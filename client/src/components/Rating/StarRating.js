@@ -18,13 +18,20 @@ const StarRating = (props) => {
 
   const updateRating = async (value) => {
     if (value !== previousRating) {
-      props.updateRating(value);
+      await props.updateRating(value);
+    }
+  };
+
+  const removeRating = async (e) => {
+    e.preventDefault();
+    if (previousRating !== 0) {
+      await props.updateRating(0);
     }
   };
 
   return (
-    <div className="star-rating">
-      {[...Array(5)].map((star, index) => {
+    <div className="star-rating" onContextMenu={removeRating}>
+      {[...Array(10)].map((star, index) => {
         index += 1;
         return (
           <CustomButton

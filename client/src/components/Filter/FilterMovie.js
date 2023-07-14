@@ -27,7 +27,7 @@ const FilterMovie = (props) => {
     },
     rating: {
       minValue: 0,
-      maxValue: 5,
+      maxValue: 10,
     },
     years: {
       selected: "",
@@ -156,7 +156,7 @@ const FilterMovie = (props) => {
               filterName="rating"
               label="Rating"
               min={0}
-              max={5}
+              max={10}
               value={filter?.rating}
               onChange={handleRangeChange}
             />
