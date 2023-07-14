@@ -44,6 +44,10 @@ const Profile = () => {
     }
   }, [ratingPage]);
 
+  useEffect(() => {
+    setTabActive(slug);
+  }, [slug]);
+
   const getInitialData = async () => {
     const userProfile = await AuthService.profile();
     await getRatingList(userProfile.id);

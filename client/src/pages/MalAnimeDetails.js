@@ -211,6 +211,7 @@ function MalAnimeDetails() {
                               rating={rating}
                               updateRating={updateRating}
                               unRating={false}
+                              isHover
                             />
                           </li>
                           <li>

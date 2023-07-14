@@ -5,7 +5,7 @@ import { Button } from "react-bootstrap";
 import "./starRating.css";
 
 const StarRating = (props) => {
-  const { rating, unRating, size } = props;
+  const { rating, unRating, size, isHover } = props;
   //const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [previousRating, setPreviousRating] = useState(0);
@@ -18,12 +18,19 @@ const StarRating = (props) => {
 
   const updateRating = async (value) => {
     if (value !== previousRating) {
-      props.updateRating(value);
+      await props.updateRating(value);
+    }
+  };
+
+  const removeRating = async (e) => {
+    e.preventDefault();
+    if (previousRating !== 0) {
+      await props.updateRating(0);
     }
   };
 
   return (
-    <div className="star-rating">
+    <div className="star-rating" onContextMenu={removeRating}>
       {[...Array(5)].map((star, index) => {
         index += 1;
         return (
@@ -32,7 +39,11 @@ const StarRating = (props) => {
             key={index}
             className={index <= (hover || rating) ? "on" : "off"}
             onClick={() => updateRating(index)}
-            onMouseEnter={() => setHover(index)}
+            onMouseEnter={() => {
+              if (isHover) {
+                setHover(index);
+              }
+            }}
             onMouseLeave={() => setHover(rating)}
             style={{ fontSize: size || "36px" }}
           >

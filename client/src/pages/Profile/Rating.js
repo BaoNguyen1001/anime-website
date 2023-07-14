@@ -17,7 +17,7 @@ const Rating = (props) => {
             <Links to={"/id/" + item.idMal} className="relation-items">
               <img src={item.coverImage.large} alt="" />
               <p style={{ marginBottom: 0 }}>{item.title.userPreferred}</p>
-              <StarRating rating={item.rating} size="20px" />
+              <StarRating rating={item.rating} size="20px" isHover={false} />
             </Links>
           ))}
       </CardWrapper>
