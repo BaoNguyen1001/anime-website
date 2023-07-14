@@ -5,10 +5,10 @@ import { FiUser } from "react-icons/fi";
 import { IconContext } from "react-icons";
 import AuthService from "../../services/Auth.service";
 
-function User() {
+function User(props) {
+  const { setTabActive } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState();
-
   useEffect(() => {
     const user = AuthService.getCurrentUser();
     setCurrentUser(user);
@@ -51,10 +51,14 @@ function User() {
           {currentUser ? (
             <>
               <div className="custom-dropdown-item your-name">{`@${currentUser.userName}`}</div>
-              <Links to="/profile" className="custom-dropdown-item">
+              <Links
+                to="/profile/overview"
+                className="custom-dropdown-item"
+                onClick={() => setTabActive("")}
+              >
                 Profile
               </Links>
-              <Links to="#" className="custom-dropdown-item">
+              <Links to="/profile/rating" className="custom-dropdown-item">
                 Ratings
               </Links>
               <Links to="#" className="custom-dropdown-item">

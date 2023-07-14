@@ -84,7 +84,7 @@ function MalAnimeDetails() {
 
   const updateRating = async (newRating) => {
     const rating = await MovieService.updateRating(id, newRating);
-    if (rating) {
+    if (rating !== undefined) {
       setRating(rating);
     }
   };

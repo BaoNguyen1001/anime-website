@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { FiSearch, FiUser } from "react-icons/fi";
@@ -7,21 +7,59 @@ import Search from "./Search";
 import User from "./User";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 
+const navBarItem = () => {
+  return [
+    {
+      id: "trending",
+      tabName: "Trending",
+      path: "/trending/1",
+    },
+    {
+      id: "popular",
+      tabName: "Popular",
+      path: "/popular/1",
+    },
+    {
+      id: "favorites",
+      tabName: "Favorites",
+      path: "/favorites/1",
+    },
+    {
+      id: "topMovies",
+      tabName: "Top Movies",
+      path: "/movies",
+    },
+    {
+      id: "recommend",
+      tabName: "Recommend",
+      path: "/recommend/1",
+    },
+  ];
+};
+
 function Nav() {
   const [isActive, setIsActive] = useState(false);
   const { height, width } = useWindowDimensions();
+  const [tabActive, setTabActive] = useState("");
+
   return (
     <div>
       <NavBar>
-        <Link to="/">
+        <Link to="/" onClick={() => setTabActive("")}>
           <img src="./assets/logo.svg" alt="Logo Here" />
         </Link>
         <div className="nav-links">
-          <Links to="/trending/1">Trending</Links>
-          <Links to="/popular/1">Popular</Links>
-          <Links to="/favourites/1">Favourites</Links>
-          <Links to="/movies">Top Movies</Links>
-          <Links to="/recommend/1">Recommend</Links>
+          {navBarItem().map((item) => (
+            <Links
+              to={item.path}
+              onClick={() => setTabActive(item.id)}
+              className={`tab-hover ${
+                tabActive === item.id ? "tab-active" : ""
+              }`}
+            >
+              {item.tabName}
+            </Links>
+          ))}
         </div>
 
         <NavBarRight>
@@ -58,7 +96,7 @@ function Nav() {
               </Button>
             </IconContext.Provider>
           )}
-          <User />
+          <User setTabActive={setTabActive} />
         </NavBarRight>
       </NavBar>
       {isActive && <Search isActive={isActive} setIsActive={setIsActive} />}
@@ -122,6 +160,27 @@ const NavBar = styled.nav`
     }
     .nav-links {
       display: none;
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .tab-hover:after {
+      display: block;
+      content: "";
+      border-bottom: solid 2px white;
+      transform: scaleX(0);
+      transition: transform 250ms ease-in-out;
+    }
+
+    .tab-hover:hover:after {
+      transform: scaleX(1);
+    }
+
+    .tab-active:after {
+      transform: scaleX(1);
     }
   }
 `;

@@ -3,7 +3,7 @@ import React, { Suspense } from "react";
 import { Toaster } from "react-hot-toast";
 import Nav from "./components/Navigation/Nav";
 import AnimeDetails from "./pages/AnimeDetails";
-import FavouriteAnime from "./pages/FavouriteAnime";
+import FavoritesAnime from "./pages/FavoritesAnime";
 import Home from "./pages/Home";
 import MalAnimeDetails from "./pages/MalAnimeDetails";
 import PopularAnime from "./pages/PopularAnime";
@@ -32,7 +32,7 @@ function AppRoutes() {
           <Route path="/signup" element={<Register />} />
           <Route path="/popular/:page" element={<PopularAnime />} />
           <Route path="/trending/:page" element={<TrendingAnime />} />
-          <Route path="/favourites/:page" element={<FavouriteAnime />} />
+          <Route path="/favorites/:page" element={<FavoritesAnime />} />
           <Route path="/top100/:page" element={<Top100Anime />} />
           <Route path="/movies" element={<PopularMovies />} />
           <Route path="/recommend/:page" element={<RecommendAnime />} />
@@ -41,7 +41,7 @@ function AppRoutes() {
           <Route path="/watch/:episode" element={<WatchAnime />} />
           <Route path="/id/:id" element={<MalAnimeDetails />} />
           <Route path="/play/:slug/:episode" element={<WatchAnimeV2 />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:slug" element={<Profile />} />
         </Routes>
         <Toaster
           toastOptions={{

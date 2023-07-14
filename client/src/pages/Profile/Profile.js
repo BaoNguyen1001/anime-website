@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Overview from "./Overview";
 import Rating from "./Rating";
 import { useState } from "react";
@@ -11,10 +11,12 @@ import UserProfileSkeleton from "../../components/skeletons/UserProfileSkeleton"
 const navBarItem = () => {
   return [
     {
+      id: "overview",
       tabName: "Overview",
       path: "/profile",
     },
     {
+      id: "rating",
       tabName: "Rating",
       path: "/profile/rating",
     },
@@ -22,11 +24,11 @@ const navBarItem = () => {
 };
 
 const Profile = () => {
+  const slug = useParams().slug;
   const [user, setUser] = useState(null);
-  const [tabActive, setTabActive] = useState("Overview");
+  const [tabActive, setTabActive] = useState(slug || "overview");
   const [ratingList, setRatingList] = useState([]);
   const [ratingPage, setRatingPage] = useState(1);
-
   const onTabChange = (event) => {
     const { name } = event.target;
     setTabActive(name);
@@ -116,7 +118,7 @@ const Profile = () => {
   const renderTab = () => {
     let cell = <div></div>;
     switch (tabActive) {
-      case "Overview":
+      case "overview":
         cell = (
           <Overview
             user={user}
@@ -126,7 +128,7 @@ const Profile = () => {
         );
         break;
 
-      case "Rating":
+      case "rating":
         cell = (
           <Rating
             data={ratingList}
@@ -155,7 +157,14 @@ const Profile = () => {
             <NavWrapper>
               <div className="nav container">
                 {navBarItem().map((item) => (
-                  <Links to="#" onClick={onTabChange} name={item.tabName}>
+                  <Links
+                    to={`/profile/${item.id}`}
+                    onClick={onTabChange}
+                    name={item.id}
+                    className={`tab-hover ${
+                      tabActive === item.id ? "tab-active" : ""
+                    }`}
+                  >
                     {item.tabName}
                   </Links>
                 ))}
@@ -202,6 +211,22 @@ const HeaderProfile = styled.div`
 const NavWrapper = styled.div`
   .nav {
     padding: 20px 20px;
+  }
+
+  .tab-hover:after {
+    display: block;
+    content: "";
+    border-bottom: solid 2px white;
+    transform: scaleX(0);
+    transition: transform 250ms ease-in-out;
+  }
+
+  .tab-hover:hover:after {
+    transform: scaleX(1);
+  }
+
+  .tab-active:after {
+    transform: scaleX(1);
   }
 `;
 
